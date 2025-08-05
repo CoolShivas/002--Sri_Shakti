@@ -7,7 +7,11 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
         {/* Logo and Brand */}
         <div className="flex items-center space-x-3">
-          <img src="/logo.png" alt="Logo" className="h-10 w-10 rounded-full" />
+          <img
+            src="/images/SriSakthi.jpg"
+            alt="Logo"
+            className="h-10 w-10 rounded-full cursor-pointer"
+          />
           <span className="text-xl font-bold tracking-wide uppercase">
             SRI <span className="text-red-600">SAKTHI</span> UNIFORMS
           </span>
