@@ -202,25 +202,111 @@ const ContactSection = () => {
         </div>
 
         {/* Service Areas */}
-        <Card className="shadow-md">
+        <div className="text-center mb-14">
+          <motion.h2
+            className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-700 via-fuchsia-500 to-amber-500 text-green-900 bg-clip-text text-transparent drop-shadow-lg hover:text-slate-500 cursor-pointer"
+            initial={{ scale: 0.95 }}
+            animate={{ scale: [0.95, 1.02, 1] }}
+            transition={{
+              duration: 2,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "mirror",
+            }}
+          >
+            Our Service Areas
+          </motion.h2>
+        </div>
+        <Card className="shadow-md bg-slate-300">
           <CardHeader>
-            <CardTitle className="text-center text-brand-red text-xl">
+            {/* <CardTitle className="text-center text-brand-red text-xl">
               Our Service Areas
-            </CardTitle>
+            </CardTitle> */}
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap justify-center gap-3">
-              {serviceAreas.map((area, i) => (
+              {/* {serviceAreas.map((area, i) => (
                 <span
                   key={i}
-                  className="px-4 py-1.5 bg-gradient-to-r from-brand-red/10 to-brand-blue/10 text-gray-700 rounded-full text-sm font-medium hover:from-brand-red/20 hover:to-brand-blue/20 transition-colors"
+                  className="px-4 py-1.5 bg-gradient-to-r from-brand-red/10 to-brand-blue/10 text-gray-900 rounded-full text-sm font-medium hover:from-brand-red/20 hover:to-brand-blue/20 transition-colors"
                 >
                   {area}
                 </span>
+              ))} */}
+
+              {/* {serviceAreas.map((area, i) => (
+                <span
+                  key={i}
+                  className="px-4 py-1.5 rounded-full text-sm font-medium text-gray-900 
+               bg-gradient-to-r from-brand-red/10 to-brand-blue/10 
+               hover:from-brand-red/30 hover:to-brand-blue/30 
+               hover:bg-red-300 hover:shadow-md 
+               transition-all duration-300 ease-in-out cursor-pointer"
+                >
+                  {area}
+                </span>
+              ))} */}
+
+              {serviceAreas.map((area, i) => (
+                <span
+                  key={i}
+                  className="relative inline-block px-6 py-3 rounded-full 
+             bg-gradient-to-br from-[#6366F1] via-[#ca6f9d] to-[#F59E0B] 
+             text-white font-semibold text-base sm:text-lg shadow-md 
+             hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1"
+                >
+                  <span className="relative z-10 drop-shadow-md">{area}</span>
+                  <span
+                    className="absolute inset-0 rounded-full bg-white opacity-10 blur-sm mix-blend-overlay 
+               transition duration-500 group-hover:opacity-20"
+                  />
+                </span>
               ))}
-              <span className="px-4 py-1.5 bg-gradient-to-r from-brand-red to-brand-blue text-white rounded-full text-sm font-semibold shadow">
-                + All India
+
+              {/* /////////////---------------------------------------------------------- */}
+
+              {/* /////////////---------------------------------------------------------- */}
+
+              {/* <span className="inline-flex items-center justify-center p-2 bg-gradient-to-r from-purple-700 via-pink-500 to-orange-600 rounded-2xl text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-pink-300/40">
+                <span className="text-center">
+                  <p className="text-base sm:text-lg opacity-90 font-bold tracking-tight text-yellow-100 hover:text-rose-950">
+                    + All India
+                  </p>
+                </span>
+              </span> */}
+
+              {/* /////////////---------------------------------------------------------- */}
+
+              {/* <span
+                className="relative inline-flex items-center justify-center px-6 py-3 rounded-full 
+             bg-gradient-to-br from-[#ff6ec4] via-[#7873f5] to-[#4ADEDE]
+             text-white font-semibold text-base sm:text-lg tracking-tight
+             shadow-[0_10px_20px_rgba(0,0,0,0.2)] transition-transform duration-300 
+             hover:scale-105 hover:shadow-[0_15px_25px_rgba(0,0,0,0.25)]
+             active:scale-95"
+              >
+                <span className="z-10">+ All India</span>
+                <span
+                  className="absolute inset-0 rounded-full opacity-30 blur-sm 
+               bg-gradient-to-r from-white via-transparent to-white"
+                />
+              </span> */}
+
+              {/* /////////////---------------------------------------------------------- */}
+
+              <span
+                className="relative inline-flex items-center justify-center px-6 py-3 
+             rounded-full bg-[#111827] text-white text-base sm:text-lg font-semibold 
+             shadow-lg hover:bg-[#1f2937] transition duration-300 ease-in-out group"
+              >
+                <span className="relative z-10">+ All India</span>
+                <span
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-indigo-500 
+               opacity-0 group-hover:opacity-100 blur-sm transition duration-500"
+                />
               </span>
+
+              {/* /////////////---------------------------------------------------------- */}
             </div>
           </CardContent>
         </Card>
