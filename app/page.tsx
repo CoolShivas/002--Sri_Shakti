@@ -1,6 +1,7 @@
 import HeroSlider from "../components/HeroSlider";
 import BrandPartners from "../components/BrandPartners";
 import ProductCategories from "../components/ProductCategories";
+import ContactSection from "../components/ContactSection";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <HeroSlider></HeroSlider>
       <ProductCategories></ProductCategories>
       <BrandPartners></BrandPartners>
+      <ContactSection></ContactSection>
     </main>
   );
 }
