@@ -20,7 +20,9 @@ const Header = () => {
         {/* Contact Info */}
         <div className="flex items-center space-x-2 text-sm text-gray-600 cursor-pointer font-bold">
           <FaPhoneAlt className="text-blue-600" />
-          <span>+91 98765 43210</span>
+          <span className="hover:text-red-600">+91 97861 97831</span>
+          <FaPhoneAlt className="text-blue-600" />
+          <span className="hover:text-red-600">+91 97865 97835</span>
         </div>
       </div>
     </div>
