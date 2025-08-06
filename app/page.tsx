@@ -1,4 +1,5 @@
 import HeroSlider from "../components/HeroSlider";
+import BrandPartners from "../components/BrandPartners";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
         including school, corporate, hospital, hotel and more.
       </p>
       <HeroSlider></HeroSlider>
+      <BrandPartners></BrandPartners>
     </main>
   );
 }
