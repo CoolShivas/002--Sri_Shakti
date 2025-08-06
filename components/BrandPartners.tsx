@@ -16,45 +16,24 @@ const brands = [
   { name: "House of Uniforms", image: "/images/HouseUniforms.webp" },
 ];
 
-const BrandPartners = () => {
-  const marqueeVariants = {
-    animate: {
-      x: ["0%", "-100%"],
-      transition: {
-        x: {
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 25,
-          ease: "linear",
-        },
+const marqueeVariants = {
+  animate: {
+    x: ["0%", "-100%"],
+    transition: {
+      x: {
+        repeat: Infinity,
+        repeatType: "loop",
+        duration: 25,
+        ease: "linear",
       },
     },
-  };
+  },
+};
 
+const BrandPartners = () => {
   return (
     <section className="py-16 bg-white overflow-hidden">
       <div className="container mx-auto px-4">
-        {/* Starting of Our Brand Partners Heading */}
-
-        {/* <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-            Our Brand Partners
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Authorized dealers and suppliers of premium uniform brands
-          </p>
-        </div> */}
-
-        {/* <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 bg-clip-text text-transparent animate-text mb-4 drop-shadow-sm">
-            Our Brand Partners
-          </h2>
-          <p className="text-md md:text-lg text-gray-700 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide">
-            Trusted suppliers of premium uniforms and fabric brands, powering
-            excellence across industries.
-          </p>
-        </div> */}
-
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 50 }}
@@ -92,27 +71,6 @@ const BrandPartners = () => {
           </motion.p>
         </motion.div>
 
-        {/* Ending of Our Brand Partners Heading */}
-        {/* //////////////////////////////////////////////////////////////////////////// */}
-        {/* Starting of Auto-Slider Brands Logos */}
-
-        {/* <div className="relative w-full overflow-hidden">
-          <motion.div
-            className="flex w-max space-x-12"
-            variants={marqueeVariants}
-            animate="animate"
-          >
-            {[...brands, ...brands].map((brand, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0 w-36 h-24 flex items-center justify-center"
-              >
-                <img src={brand.image} alt={brand.name} />
-              </div>
-            ))}
-          </motion.div>
-        </div> */}
-
         <div className="relative w-full overflow-hidden py-8 bg-gradient-to-r from-white via-gray-500 to-white shadow-inner">
           <motion.div
             className="flex w-max space-x-16"
@@ -131,34 +89,6 @@ const BrandPartners = () => {
           </motion.div>
         </div>
 
-        {/* Ending of Auto-Slider Brands Logos */}
-        {/* //////////////////////////////////////////////////////////////////////////// */}
-        {/* Starting of Authorized Dealer Section */}
-
-        {/* <div className="text-center mt-12">
-          <div className="inline-flex items-center justify-center p-8 bg-gradient-to-r from-red-600 to-blue-600 rounded-lg text-white shadow-xl">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold mb-2">Authorized Dealer</h3>
-              <p className="text-lg opacity-90">
-                Premium Quality Fabrics & Uniforms
-              </p>
-            </div>
-          </div>
-        </div> */}
-
-        {/* <div className="text-center mt-12">
-          <div className="inline-flex items-center justify-center p-8 bg-gradient-to-r from-purple-500 via-pink-400 to-orange-400 rounded-2xl text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-pink-300/40">
-            <div className="text-center">
-              <h3 className="text-3xl font-extrabold mb-2 tracking-wide drop-shadow-sm">
-                🌟 Authorized Dealer
-              </h3>
-              <p className="text-base sm:text-lg opacity-90 font-medium tracking-tight hover:text-red-950">
-                Premium Quality Fabrics & Uniforms
-              </p>
-            </div>
-          </div>
-        </div> */}
-
         <div className="text-center mt-12">
           <div className="inline-flex items-center justify-center p-8 bg-gradient-to-r from-purple-700 via-pink-500 to-orange-600 rounded-2xl text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-pink-300/40">
             <div className="text-center">
@@ -171,8 +101,6 @@ const BrandPartners = () => {
             </div>
           </div>
         </div>
-
-        {/* Ending of Authorized Dealer Section */}
       </div>
     </section>
   );
