@@ -175,7 +175,7 @@ import { Menu, X } from "lucide-react";
 
 const navItems = [
   { name: "School Uniforms", href: "/schooluniform" },
-  { name: "Womens Uniforms", href: "/women" },
+  { name: "Womens Uniforms", href: "/womenuniform" },
   { name: "Mens Uniforms", href: "/men" },
   { name: "Company Uniforms", href: "/company" },
   { name: "Hospital Uniforms", href: "/hospital" },
