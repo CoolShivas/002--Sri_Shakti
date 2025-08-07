@@ -176,11 +176,11 @@ import { Menu, X } from "lucide-react";
 const navItems = [
   { name: "School Uniforms", href: "/schooluniform" },
   { name: "Womens Uniforms", href: "/womenuniform" },
-  { name: "Mens Uniforms", href: "/men" },
-  { name: "Company Uniforms", href: "/company" },
-  { name: "Hospital Uniforms", href: "/hospital" },
-  { name: "Hotel Uniforms", href: "/hotel" },
-  { name: "Other Uniforms", href: "/others" },
+  { name: "Mens Uniforms", href: "/menuniform" },
+  { name: "Company Uniforms", href: "/companyuniform" },
+  { name: "Hospital Uniforms", href: "/hospitaluniform" },
+  { name: "Hotel Uniforms", href: "/hoteluniform" },
+  { name: "Other Uniforms", href: "/otheruniform" },
 ];
 
 const Navbar = () => {
