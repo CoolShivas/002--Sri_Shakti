@@ -12,32 +12,32 @@ interface Category {
 const categories: Category[] = [
   {
     title: "School Uniforms",
-    image: "/images/school_uniform.jpg",
+    image: "/uniforms/school_uniforms.png",
     items: ["Boys", "Girls", "Accessories"],
   },
   {
     title: "Mens Uniforms",
-    image: "/images/mens_uniform.jpg",
+    image: "/uniforms/men_uniforms.png",
     items: ["Corporate", "Security", "Industrial"],
   },
   {
     title: "Womens Uniforms",
-    image: "/images/womens_uniform.jpg",
+    image: "/uniforms/women_uniforms.png",
     items: ["Formal", "Nursing", "Housekeeping"],
   },
   {
     title: "Company Uniforms",
-    image: "/images/company_uniform.jpg",
+    image: "/uniforms/company_uniforms.png",
     items: ["Logistics", "Technical", "Office Staff"],
   },
   {
     title: "Hotel Uniforms",
-    image: "/images/hotel_uniform.jpg",
+    image: "/uniforms/hotel_uniforms.png",
     items: ["Chef", "Housekeeping", "Reception"],
   },
   {
     title: "Hospital Uniforms",
-    image: "/images/hospital_uniform.jpg",
+    image: "/uniforms/hospital_uniforms.png",
     items: ["Doctors", "Nurses", "Support Staff"],
   },
 ];
@@ -111,7 +111,8 @@ const ProductCategories = () => {
               <Image
                 src={category.image}
                 alt={category.title}
-                fill
+                layout="fill"
+                objectFit="contain"
                 className="object-cover"
               />
             </div>
