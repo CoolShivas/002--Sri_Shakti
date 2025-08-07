@@ -4,12 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import type { FC } from "react";
 import { motion } from "framer-motion";
-import { Phone, PhoneCall } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 interface SchoolCategory {
   title: string;
   description: string;
   features: string[];
+  image: string;
 }
 
 const cardVariants = {
@@ -29,6 +30,7 @@ const SchoolUniforms: FC = () => {
   const schoolCategories: SchoolCategory[] = [
     {
       title: "CBSE School Uniforms",
+      image: "/school_uniforms/CBSEUniforms.png",
       description:
         "High-quality uniforms designed specifically for CBSE schools with standard patterns and colors.",
       features: [
@@ -40,6 +42,7 @@ const SchoolUniforms: FC = () => {
     },
     {
       title: "Private School Uniforms",
+      image: "/school_uniforms/PRIVATEUniforms.png",
       description:
         "Custom uniforms tailored to private school requirements with premium fabrics.",
       features: [
@@ -51,6 +54,7 @@ const SchoolUniforms: FC = () => {
     },
     {
       title: "Government School Uniforms",
+      image: "/school_uniforms/GovtUniforms.png",
       description:
         "Affordable and durable uniforms meeting government school standards.",
       features: [
@@ -62,6 +66,7 @@ const SchoolUniforms: FC = () => {
     },
     {
       title: "Uniform Shirtings",
+      image: "/school_uniforms/UniformShirtings.png",
       description:
         "High-quality shirting materials in various patterns and colors.",
       features: [
@@ -73,6 +78,7 @@ const SchoolUniforms: FC = () => {
     },
     {
       title: "Uniform Suitings",
+      image: "/school_uniforms/UniformSuitings.png",
       description: "Premium suiting materials for formal school uniforms.",
       features: [
         "Formal wear",
@@ -83,6 +89,7 @@ const SchoolUniforms: FC = () => {
     },
     {
       title: "Plain School Uniforms",
+      image: "/school_uniforms/PlainSchoolUniforms.png",
       description:
         "Simple and elegant plain uniforms for all types of schools.",
       features: [
@@ -96,29 +103,6 @@ const SchoolUniforms: FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-
-      {/* <section className="py-16 bg-gradient-to-r from-brand-red to-brand-blue text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            School Uniforms
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 opacity-90">
-            CBSE Uniforms, Government School Uniforms and Plain Uniforms
-          </p>
-          <div className="max-w-4xl mx-auto">
-            <Image
-              src="/images/hero-school-uniforms.jpg"
-              alt="School Uniforms"
-              width={1200}
-              height={500}
-              className="w-full h-64 md:h-96 object-cover rounded-lg shadow-2xl"
-              priority
-            />
-          </div>
-        </div>
-      </section> */}
-
       <section className="relative py-20 bg-gradient-to-r from-rose-500 via-pink-500 to-indigo-500 text-white overflow-hidden">
         <div className="container mx-auto px-4 text-center relative z-10">
           <motion.h1
@@ -155,25 +139,10 @@ const SchoolUniforms: FC = () => {
             />
           </motion.div>
         </div>
-
-        {/* Floating glow shapes */}
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute w-96 h-96 bg-white/10 rounded-full blur-3xl -top-20 -left-20 animate-pulse"></div>
-          <div className="absolute w-96 h-96 bg-white/10 rounded-full blur-3xl bottom-0 right-0 animate-ping delay-2000"></div>
-        </div>
       </section>
 
-      {/* Products Grid */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          {/* <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              School Uniform Categories
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Complete range of school uniforms for all educational institutions
-            </p>
-          </div> */}
           <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 50 }}
@@ -213,43 +182,6 @@ const SchoolUniforms: FC = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* {schoolCategories.map((category, index) => (
-              <Card
-                key={index}
-                className="hover:shadow-xl transition-all duration-300 cursor-pointer group"
-              >
-                <CardHeader>
-                  <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center mb-4">
-                    <div className="text-center p-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-brand-red to-brand-blue rounded-full flex items-center justify-center mx-auto mb-4">
-                        <div className="text-white font-bold text-xl">
-                          {category.title.charAt(0)}
-                        </div>
-                      </div>
-                      <p className="text-sm text-gray-600">Product Image</p>
-                    </div>
-                  </div>
-                  <CardTitle className="text-xl text-brand-red group-hover:text-brand-blue transition-colors">
-                    {category.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">{category.description}</p>
-                  <ul className="space-y-1">
-                    {category.features.map((feature, featureIndex) => (
-                      <li
-                        key={featureIndex}
-                        className="text-sm text-gray-500 flex items-center"
-                      >
-                        <span className="w-2 h-2 bg-brand-blue rounded-full mr-2"></span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))} */}
-
             {schoolCategories.map((category, index) => (
               <motion.div
                 key={index}
@@ -261,29 +193,34 @@ const SchoolUniforms: FC = () => {
               >
                 <Card className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2">
                   <CardHeader>
-                    <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center mb-4 shadow-inner">
-                      <div className="text-center p-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-brand-red to-brand-blue rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                          <div className="text-white font-bold text-xl">
-                            {category.title.charAt(0)}
-                          </div>
-                        </div>
-                        <p className="text-xs text-gray-500">Product Image</p>
-                      </div>
+                    <div className="h-48 relative mb-4 rounded-lg overflow-hidden">
+                      <Image
+                        src={category.image}
+                        alt={category.title}
+                        fill
+                        className="object-contain rounded-lg shadow-2xl"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        priority
+                      />
                     </div>
-                    <CardTitle className="text-xl text-brand-red group-hover:text-brand-blue transition-colors font-semibold">
+                    {/* <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">
                       {category.title}
-                    </CardTitle>
+                    </h3> */}
+                    <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center">
+                      {category.title}
+                    </h3>
                   </CardHeader>
-
                   <CardContent>
-                    <p className="text-gray-700 mb-4 text-sm leading-relaxed">
+                    <p className="text-gray-600 mb-4 text-center">
                       {category.description}
                     </p>
-                    <ul className="space-y-1 text-sm text-gray-600">
+                    <ul className="space-y-2">
                       {category.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center">
-                          <span className="w-2 h-2 bg-brand-blue rounded-full mr-2"></span>
+                        <li
+                          key={featureIndex}
+                          className="flex items-center text-sm text-gray-500"
+                        >
+                          <CheckCircle className="w-4 h-4 text-brand-blue mr-2" />
                           {feature}
                         </li>
                       ))}
