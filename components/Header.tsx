@@ -1,6 +1,7 @@
 "use client";
 
 import { FaPhoneAlt } from "react-icons/fa";
+import Image from "next/image";
 
 const Header = () => {
   return (
@@ -8,10 +9,13 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
         {/* Logo and Brand */}
         <div className="flex items-center space-x-3">
-          <img
+          <Image
             src="/images/SriSakthi.jpg"
             alt="Logo"
-            className="h-10 w-10 rounded-full cursor-pointer"
+            width={40}
+            height={40}
+            className="rounded-full cursor-pointer"
+            priority
           />
           <span className="text-lg sm:text-xl font-bold tracking-wide uppercase text-center sm:text-left">
             SRI <span className="text-red-600">SAKTHI</span> UNIFORMS

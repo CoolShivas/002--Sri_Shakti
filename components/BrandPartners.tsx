@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const brands = [
   { name: "Raymond", image: "/images/Raymond Limited Logo 2.jpg" },
@@ -83,7 +84,14 @@ const BrandPartners = () => {
                 whileHover={{ scale: 1.1, rotate: 1 }}
                 className="flex-shrink-0 w-36 h-24 flex items-center justify-center hover:drop-shadow-xl transition-all"
               >
-                <img src={brand.image} alt={brand.name} />
+                <Image
+                  src={brand.image}
+                  alt={brand.name}
+                  width={200}
+                  height={100}
+                  className="object-contain" // optional styling
+                  priority
+                />
               </motion.div>
             ))}
           </motion.div>
