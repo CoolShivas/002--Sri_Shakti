@@ -2,20 +2,21 @@ import "./globals.css";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Footer from "@/components/Footer";
+import { ReactNode } from "react";
 
 export const metadata = {
   title: "Sri Sakthi Uniforms",
   description: "Uniform manufacturer in Tamil Nadu",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-white text-gray-900">
         <Header />
         <Navbar />
-        <main className="min-h-screen bg-white">{children}</main>
-        <Footer></Footer>
+        <main className="min-h-screen">{children}</main>
+        <Footer />
       </body>
     </html>
   );

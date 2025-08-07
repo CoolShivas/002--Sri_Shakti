@@ -13,11 +13,13 @@ const navItems = [
   { name: "Hospital Uniforms", href: "/hospital" },
   { name: "Hotel Uniforms", href: "/hotel" },
   { name: "Other Uniforms", href: "/others" },
+  { name: "Products", href: "/products" },
+  { name: "Contact", href: "/contact" },
+  { name: "About", href: "/about" }, // ✅ NEW
 ];
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   return (
