@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { FC } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
+import ContactAdvertise from "@/components/ContactAdvertise";
 
 interface SchoolCategory {
   title: string;
@@ -232,6 +233,8 @@ const SchoolUniforms: FC = () => {
           </div>
         </div>
       </section>
+
+      <ContactAdvertise></ContactAdvertise>
     </div>
   );
 };
