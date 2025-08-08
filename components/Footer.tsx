@@ -108,6 +108,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
   Facebook,
   Instagram,
@@ -171,17 +172,43 @@ const Footer = () => {
             Quick Links
           </h4>
           <ul className="text-sm text-gray-400 space-y-3">
-            <li className="hover:text-white hover:text-xl cursor-pointer transition-all">
+            {/* <li className="hover:text-white hover:text-xl cursor-pointer transition-all">
               Home
+            </li> */}
+            <li>
+              <Link
+                href="/"
+                className="hover:text-white hover:text-xl cursor-pointer transition-all"
+              >
+                Home
+              </Link>
             </li>
-            <li className="hover:text-white hover:text-xl cursor-pointer transition-all">
-              Products
+
+            <li>
+              <Link
+                href="/about"
+                className="hover:text-white hover:text-xl cursor-pointer transition-all"
+              >
+                About Us
+              </Link>
             </li>
-            <li className="hover:text-white hover:text-xl cursor-pointer transition-all">
-              Categories
+
+            <li>
+              <Link
+                href="/contact"
+                className="hover:text-white hover:text-xl cursor-pointer transition-all"
+              >
+                Contact Us
+              </Link>
             </li>
-            <li className="hover:text-white hover:text-xl cursor-pointer transition-all">
-              Contact
+
+            <li>
+              <Link
+                href="/products"
+                className="hover:text-white hover:text-xl cursor-pointer transition-all"
+              >
+                Products
+              </Link>
             </li>
           </ul>
         </motion.div>
