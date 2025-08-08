@@ -224,7 +224,7 @@ const ContactSection = () => {
             </CardTitle> */}
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap justify-center gap-3">
+            <div className="flex flex-wrap justify-center gap-3 rounded-xl">
               {/* {serviceAreas.map((area, i) => (
                 <span
                   key={i}
@@ -247,7 +247,7 @@ const ContactSection = () => {
                 </span>
               ))} */}
 
-              {serviceAreas.map((area, i) => (
+              {/* {serviceAreas.map((area, i) => (
                 <span
                   key={i}
                   className="relative inline-block px-6 py-3 rounded-full 
@@ -261,13 +261,28 @@ const ContactSection = () => {
                transition duration-500 group-hover:opacity-20"
                   />
                 </span>
+              ))} */}
+
+              {/* /////////////---------------------------------------------------------- */}
+
+              {/* /////////////---------------------------------------------------------- */}
+
+              {serviceAreas.map((area, i) => (
+                <span
+                  key={i}
+                  className="relative inline-flex items-center justify-center px-6 py-3 
+             rounded-full bg-[#6ccfbf] text-white text-base sm:text-lg font-semibold 
+             shadow-lg hover:bg-[#c4ee6f] transition duration-300 ease-in-out group"
+                >
+                  <span className="relative z-10">{area}</span>
+                  <span
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-indigo-500 
+               opacity-0 group-hover:opacity-100 blur-sm transition duration-500 hover:text-xl"
+                  />
+                </span>
               ))}
 
-              {/* /////////////---------------------------------------------------------- */}
-
-              {/* /////////////---------------------------------------------------------- */}
-
-              {/* <span className="inline-flex items-center justify-center p-2 bg-gradient-to-r from-purple-700 via-pink-500 to-orange-600 rounded-2xl text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-pink-300/40">
+              {/* <span >
                 <span className="text-center">
                   <p className="text-base sm:text-lg opacity-90 font-bold tracking-tight text-yellow-100 hover:text-rose-950">
                     + All India
@@ -294,9 +309,28 @@ const ContactSection = () => {
 
               {/* /////////////---------------------------------------------------------- */}
 
+              {/* {serviceAreas.map((curr, ind) => {
+                <span
+                  className="relative inline-flex items-center justify-center px-6 py-3 
+             rounded-full bg-[#e55050] text-white text-base sm:text-lg font-semibold 
+             shadow-lg hover:bg-[#c4ee6f] transition duration-300 ease-in-out group"
+                  key={ind}
+                >
+                  <span className="relative z-10">{curr}</span>
+                  <span
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-indigo-500 
+               opacity-0 group-hover:opacity-100 blur-sm transition duration-500"
+                  />
+                </span>;
+              })} */}
+
+              {/* /////////////---------------------------------------------------------- */}
+
+              {/* /////////////---------------------------------------------------------- */}
+
               <span
                 className="relative inline-flex items-center justify-center px-6 py-3 
-             rounded-full bg-[#111827] text-white text-base sm:text-lg font-semibold 
+             rounded-full bg-[#728385] text-white text-base sm:text-lg font-semibold 
              shadow-lg hover:bg-[#1f2937] transition duration-300 ease-in-out group"
               >
                 <span className="relative z-10">+ All India</span>

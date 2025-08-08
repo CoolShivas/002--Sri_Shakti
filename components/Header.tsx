@@ -26,11 +26,15 @@ const Header = () => {
         <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-gray-600 font-bold">
           <div className="flex items-center gap-1">
             <FaPhoneAlt className="text-blue-600" />
-            <span className="hover:text-red-600">+91 97861 97831</span>
+            <span className="hover:text-red-600 hover:text-xl">
+              +91 97861 97831
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <FaPhoneAlt className="text-blue-600" />
-            <span className="hover:text-red-600">+91 97865 97835</span>
+            <span className="hover:text-red-600 hover:text-xl">
+              +91 97865 97835
+            </span>
           </div>
         </div>
       </div>
