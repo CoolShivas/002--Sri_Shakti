@@ -217,7 +217,7 @@ const ContactSection = () => {
             Our Service Areas
           </motion.h2>
         </div>
-        <Card className="shadow-md bg-slate-300">
+        <Card className="shadow-md bg-slate-200">
           <CardHeader>
             {/* <CardTitle className="text-center text-brand-red text-xl">
               Our Service Areas
@@ -272,7 +272,7 @@ const ContactSection = () => {
                   key={i}
                   className="relative inline-flex items-center justify-center px-6 py-3 
              rounded-full bg-[#6ccfbf] text-white text-base sm:text-lg font-semibold 
-             shadow-lg hover:bg-[#c4ee6f] transition duration-300 ease-in-out group"
+             shadow-lg hover:bg-[#c4ee6f] transition duration-300 ease-in-out group hover:text-xl cursor-pointer"
                 >
                   <span className="relative z-10">{area}</span>
                   <span
