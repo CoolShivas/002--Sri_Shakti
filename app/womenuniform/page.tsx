@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { FC } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
+import ContactAdvertise from "@/components/ContactAdvertise";
 
 interface WomenCategory {
   title: string;
@@ -107,7 +108,7 @@ const WomenUniforms: FC = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg"
           >
-            Womens Uniforms
+            Women's Uniforms
           </motion.h1>
 
           <motion.p
@@ -227,6 +228,7 @@ const WomenUniforms: FC = () => {
             ))}
           </div>
         </div>
+        <ContactAdvertise></ContactAdvertise>
       </section>
     </div>
   );

@@ -96,7 +96,7 @@ const OtherUniforms: FC = () => {
             className="max-w-5xl mx-auto"
           >
             <Image
-              src="/images/hero-company-uniforms.jpg"
+              src="/images/hero-other-uniforms.jpg"
               alt="School Uniforms"
               width={1200}
               height={500}
