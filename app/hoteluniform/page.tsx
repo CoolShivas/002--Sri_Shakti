@@ -40,6 +40,7 @@ const HotelUniforms: FC = () => {
         "Name badge and brand placement options",
         "Available in brand colors",
       ],
+      code: "HU-001",
     },
     {
       title: "Housekeeping Uniforms",
@@ -52,6 +53,7 @@ const HotelUniforms: FC = () => {
         "Functional pockets for tools",
         "Color-coded options for departments",
       ],
+      code: "HU-002",
     },
     {
       title: "Chef & Kitchen Staff Uniforms",
@@ -64,6 +66,7 @@ const HotelUniforms: FC = () => {
         "Adjustable closures for fit",
         "Easy to launder at high temperatures",
       ],
+      code: "HU-003",
     },
     {
       title: "Waitstaff & Service Uniforms",
@@ -76,6 +79,7 @@ const HotelUniforms: FC = () => {
         "Smart pocket placement for order pads and tools",
         "Designed to pair with non-slip footwear",
       ],
+      code: "HU-004",
     },
     {
       title: "Concierge & Managerial Uniforms",
@@ -88,6 +92,7 @@ const HotelUniforms: FC = () => {
         "Coordinated accessories (ties, scarves)",
         "Available in formal color palettes",
       ],
+      code: "HU-005",
     },
     {
       title: "Spa & Wellness Uniforms",
@@ -100,6 +105,7 @@ const HotelUniforms: FC = () => {
         "Easy-care and quick-dry finishes",
         "Flexible fits suited for treatments",
       ],
+      code: "HU-006",
     },
   ];
 
@@ -185,53 +191,69 @@ const HotelUniforms: FC = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {hotelCategories.map((category, index) => (
-              <motion.div
-                key={index}
-                custom={index}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={cardVariants}
-              >
-                <Card className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2">
-                  <CardHeader>
-                    <div className="h-48 relative mb-4 rounded-lg overflow-hidden">
-                      <Image
-                        src={category.image}
-                        alt={category.title}
-                        fill
-                        className="object-contain rounded-lg shadow-2xl"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        priority
-                      />
-                    </div>
-                    {/* <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">
-                      {category.title}
-                    </h3> */}
-                    <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center">
-                      {category.title}
-                    </h3>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4 text-center">
-                      {category.description}
-                    </p>
-                    <ul className="space-y-2">
-                      {category.features.map((feature, featureIndex) => (
-                        <li
-                          key={featureIndex}
-                          className="flex items-center text-sm text-gray-500"
-                        >
-                          <CheckCircle className="w-4 h-4 text-brand-blue mr-2" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+            {hotelCategories.map((category, index) => {
+              return (
+                <motion.div
+                  key={index}
+                  custom={index}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={cardVariants}
+                >
+                  <Card className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2">
+                    <CardHeader>
+                      <div className="h-48 relative mb-4 rounded-lg overflow-hidden">
+                        <Image
+                          src={category.image}
+                          alt={category.title}
+                          fill
+                          className="object-contain rounded-lg shadow-2xl"
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          priority
+                        />
+                        {/* Logo in top-right */}
+                        <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow-md">
+                          <Image
+                            src="/images/SriSakthi.jpg"
+                            alt="Logo"
+                            width={32}
+                            height={32}
+                          />
+                        </div>
+
+                        {/* Unique Code in bottom-right */}
+                        <div className="absolute bottom-2 right-2 z-10 bg-sky-200 text-xs  px-2 py-1 rounded font-semibold">
+                          {category.code}
+                        </div>
+                      </div>
+                      {/* <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">
+                                                                {category.title}
+                                                              </h3> */}
+                      <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center">
+                        {category.title}
+                      </h3>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600 mb-4 text-center">
+                        {category.description}
+                      </p>
+                      <ul className="space-y-2">
+                        {category.features.map((feature, featureIndex) => (
+                          <li
+                            key={featureIndex}
+                            className="flex items-center text-sm text-gray-500"
+                          >
+                            <CheckCircle className="w-4 h-4 text-brand-blue mr-2" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

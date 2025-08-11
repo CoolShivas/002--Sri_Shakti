@@ -41,6 +41,7 @@ const HospitalUniforms: FC = () => {
         "Comfortable fit for long shifts",
         "Maintains crisp appearance after multiple washes",
       ],
+      code: "HosU-001",
     },
     {
       title: "Nurse Uniforms",
@@ -53,6 +54,7 @@ const HospitalUniforms: FC = () => {
         "Multiple pockets for carrying essential tools",
         "Durable stitching for frequent washing",
       ],
+      code: "HosU-002",
     },
     {
       title: "Operation Theatre Uniforms",
@@ -66,6 +68,7 @@ const HospitalUniforms: FC = () => {
         "Ergonomic fit to allow free movement during surgery",
         "Easy to disinfect and withstands high-temperature sterilization",
       ],
+      code: "HosU-003",
     },
     {
       title: "Hospital Uniform Sarees",
@@ -79,6 +82,7 @@ const HospitalUniforms: FC = () => {
         "Wrinkle-resistant for a crisp look",
         "Designed for comfort during extended shifts",
       ],
+      code: "HosU-004",
     },
     {
       title: "Hospital Uniform Pants",
@@ -92,6 +96,7 @@ const HospitalUniforms: FC = () => {
         "Wrinkle and stain-resistant material",
         "Available in multiple sizes and colors",
       ],
+      code: "HosU-005",
     },
     {
       title: "Hospital Uniform Shirts",
@@ -105,6 +110,7 @@ const HospitalUniforms: FC = () => {
         "Wrinkle-resistant finish",
         "Available in various colors and fits",
       ],
+      code: "HosU-006",
     },
     {
       title: "Mens Staff Uniforms",
@@ -118,6 +124,7 @@ const HospitalUniforms: FC = () => {
         "Designed for all-day comfort",
         "Available in multiple styles and sizes",
       ],
+      code: "HosU-007",
     },
     {
       title: "Staff Uniform Chudidhars",
@@ -131,6 +138,7 @@ const HospitalUniforms: FC = () => {
         "Available in various colors and patterns",
         "Designed for comfort during extended shifts",
       ],
+      code: "HosU-008",
     },
     {
       title: "Doctor Uniform Sarees",
@@ -144,6 +152,7 @@ const HospitalUniforms: FC = () => {
         "Available in professional and subtle colors",
         "Designed for all-day comfort and mobility",
       ],
+      code: "HosU-009",
     },
     {
       title: "Hospital Uniforms",
@@ -157,6 +166,7 @@ const HospitalUniforms: FC = () => {
         "Easy to clean and maintain",
         "Available in multiple styles and colors for different roles",
       ],
+      code: "HosU-0010",
     },
   ];
 
@@ -241,53 +251,69 @@ const HospitalUniforms: FC = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {hospitalCategories.map((category, index) => (
-              <motion.div
-                key={index}
-                custom={index}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={cardVariants}
-              >
-                <Card className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2">
-                  <CardHeader>
-                    <div className="h-48 relative mb-4 rounded-lg overflow-hidden">
-                      <Image
-                        src={category.image}
-                        alt={category.title}
-                        fill
-                        className="object-contain rounded-lg shadow-2xl"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        priority
-                      />
-                    </div>
-                    {/* <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">
-                      {category.title}
-                    </h3> */}
-                    <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center">
-                      {category.title}
-                    </h3>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4 text-center">
-                      {category.description}
-                    </p>
-                    <ul className="space-y-2">
-                      {category.features.map((feature, featureIndex) => (
-                        <li
-                          key={featureIndex}
-                          className="flex items-center text-sm text-gray-500"
-                        >
-                          <CheckCircle className="w-4 h-4 text-brand-blue mr-2" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+            {hospitalCategories.map((category, index) => {
+              return (
+                <motion.div
+                  key={index}
+                  custom={index}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={cardVariants}
+                >
+                  <Card className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2">
+                    <CardHeader>
+                      <div className="h-48 relative mb-4 rounded-lg overflow-hidden">
+                        <Image
+                          src={category.image}
+                          alt={category.title}
+                          fill
+                          className="object-contain rounded-lg shadow-2xl"
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          priority
+                        />
+                        {/* Logo in top-right */}
+                        <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow-md">
+                          <Image
+                            src="/images/SriSakthi.jpg"
+                            alt="Logo"
+                            width={32}
+                            height={32}
+                          />
+                        </div>
+
+                        {/* Unique Code in bottom-right */}
+                        <div className="absolute bottom-2 right-2 z-10 bg-sky-200 text-xs  px-2 py-1 rounded font-semibold">
+                          {category.code}
+                        </div>
+                      </div>
+                      {/* <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">
+                                                                              {category.title}
+                                                                            </h3> */}
+                      <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center">
+                        {category.title}
+                      </h3>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600 mb-4 text-center">
+                        {category.description}
+                      </p>
+                      <ul className="space-y-2">
+                        {category.features.map((feature, featureIndex) => (
+                          <li
+                            key={featureIndex}
+                            className="flex items-center text-sm text-gray-500"
+                          >
+                            <CheckCircle className="w-4 h-4 text-brand-blue mr-2" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
