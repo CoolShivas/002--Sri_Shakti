@@ -280,7 +280,8 @@ const OtherUniforms: FC = () => {
             {/* Logo Watermark */}
             <div className="absolute top-4 right-4 bg-white/70 rounded-full p-2 shadow-md">
               <Image
-                src="/images/SriSakthi.jpg"
+                // src="/images/SriSakthi.jpg"
+                src={otherCategories[selectedIndex].logo}
                 alt="Logo"
                 width={48}
                 height={48}
