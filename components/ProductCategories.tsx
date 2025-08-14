@@ -326,6 +326,7 @@ const ProductCategories: FC = () => {
                         fill
                         className="object-contain rounded-lg shadow-2xl"
                         sizes="(max-width: 768px) 10vw, 33vw"
+                        priority
                       />
                       {/* Logo in top-right */}
                       <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow-md">
@@ -334,6 +335,7 @@ const ProductCategories: FC = () => {
                           alt="Logo"
                           width={32}
                           height={32}
+                          priority
                         />
                       </div>
 
@@ -396,6 +398,7 @@ const ProductCategories: FC = () => {
               width={1000}
               height={500}
               className="w-full h-auto rounded-lg shadow-lg"
+              priority
             />
 
             {/* Logo Watermark */}
@@ -407,6 +410,7 @@ const ProductCategories: FC = () => {
                 width={48}
                 height={48}
                 className="rounded-full"
+                priority
               />
             </div>
 

@@ -26,7 +26,8 @@ const ContactSection = () => {
     "Mumbai",
   ];
 
-  const MotionCard = motion(Card);
+  // ✅ Updated to motion.create to remove deprecation warning
+  const MotionCard = motion.create(Card);
 
   return (
     <section className="py-20 bg-gradient-to-br from-white to-gray-50">
@@ -61,7 +62,6 @@ const ContactSection = () => {
         {/* Starting of Contact Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* Main Office */}
-
           <MotionCard
             whileHover={{ y: -5 }}
             transition={{ type: "spring", stiffness: 200 }}
@@ -118,7 +118,6 @@ const ContactSection = () => {
           </MotionCard>
 
           {/* Branch Office */}
-
           <MotionCard
             whileHover={{ y: -5 }}
             transition={{ type: "spring", stiffness: 200 }}
@@ -148,7 +147,6 @@ const ContactSection = () => {
           </MotionCard>
 
           {/* GST and Bank Details */}
-
           <MotionCard
             whileHover={{ y: -5 }}
             transition={{ type: "spring", stiffness: 200 }}
@@ -179,9 +177,8 @@ const ContactSection = () => {
             </CardContent>
           </MotionCard>
         </div>
-        {/* Endsing of Contact Cards */}
 
-        {/* Starting of Service Areas Section */}
+        {/* Service Areas */}
         <div className="text-center mb-14">
           <motion.h2
             className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-700 via-fuchsia-500 to-amber-500 text-green-900 bg-clip-text text-transparent drop-shadow-lg hover:text-slate-500 cursor-pointer"
@@ -198,12 +195,7 @@ const ContactSection = () => {
           </motion.h2>
         </div>
         <Card className="shadow-md bg-slate-200">
-          <CardHeader>
-            {/* <CardTitle className="text-center text-brand-red text-xl">
-              Our Service Areas
-            </CardTitle> */}
-          </CardHeader>
-
+          <CardHeader></CardHeader>
           <CardContent>
             <div className="flex flex-wrap justify-center gap-3 rounded-xl">
               {serviceAreas.map((area, i) => (
@@ -215,7 +207,6 @@ const ContactSection = () => {
                   <span className="absolute inset-0 rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-indigo-500 opacity-0 group-hover:opacity-100 blur-sm transition duration-500" />
                 </span>
               ))}
-
               <span className="relative inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#728385] text-white text-base sm:text-lg font-semibold shadow-lg hover:bg-[#1f2937] transition duration-300 ease-in-out group transform hover:scale-110">
                 <span className="relative z-10">+ All India</span>
                 <span className="absolute inset-0 rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-indigo-500 opacity-0 group-hover:opacity-100 blur-sm transition duration-500" />
