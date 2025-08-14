@@ -12,6 +12,8 @@ interface WomenCategory {
   description: string;
   features: string[];
   image: string;
+  code_ID: string;
+  logo: string;
 }
 
 const cardVariants = {

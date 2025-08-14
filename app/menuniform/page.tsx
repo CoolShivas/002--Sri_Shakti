@@ -2,9 +2,9 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import type { FC } from "react";
+import { useCallback, useEffect, useState, type FC } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ContactAdvertise from "@/components/ContactAdvertise";
 
 interface MenCategory {
@@ -12,6 +12,8 @@ interface MenCategory {
   description: string;
   features: string[];
   image: string;
+  code_ID: string;
+  logo: string;
 }
 
 const cardVariants = {
@@ -28,6 +30,8 @@ const cardVariants = {
 };
 
 const MenUniforms: FC = () => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   const mensCategories: MenCategory[] = [
     {
       title: "Uniform Shirts",
@@ -40,7 +44,8 @@ const MenUniforms: FC = () => {
         "Multiple colors",
         "Durable fabric",
       ],
-      code: "MU-001",
+      code_ID: "MU-001",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Uniform Pants",
@@ -53,7 +58,8 @@ const MenUniforms: FC = () => {
         "Multiple sizes",
         "Professional look",
       ],
-      code: "MU-002",
+      code_ID: "MU-002",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Uniform Blazers",
@@ -66,7 +72,8 @@ const MenUniforms: FC = () => {
         "Tailored fit",
         "Professional style",
       ],
-      code: "MU-003",
+      code_ID: "MU-003",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Uniform T-shirts",
@@ -74,7 +81,8 @@ const MenUniforms: FC = () => {
       description:
         "Comfortable casual wear t-shirts for informal work environments.",
       features: ["Cotton blend", "Comfortable fit", "Casual wear", "Easy care"],
-      code: "MU-004",
+      code_ID: "MU-004",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Uniform Waist Coats",
@@ -87,7 +95,8 @@ const MenUniforms: FC = () => {
         "Perfect fit",
         "Quality fabric",
       ],
-      code: "MU-005",
+      code_ID: "MU-005",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Men's Staff Uniforms",
@@ -100,9 +109,44 @@ const MenUniforms: FC = () => {
         "Professional appearance",
         "Bulk orders",
       ],
-      code: "MU-006",
+      code_ID: "MU-006",
+      logo: "/images/SriSakthi.jpg",
     },
   ];
+
+  const handlerOnNext = useCallback(() => {
+    if (selectedIndex === null) {
+      return;
+    } else {
+      setSelectedIndex((prev) => (prev! + 1) % mensCategories.length);
+    }
+  }, [selectedIndex, mensCategories.length]);
+
+  const handlerOnPrevious = useCallback(() => {
+    if (selectedIndex === null) {
+      return;
+    } else {
+      setSelectedIndex((prev) => {
+        return prev! === 0 ? mensCategories.length - 1 : prev! - 1;
+      });
+    }
+  }, [selectedIndex, mensCategories.length]);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (selectedIndex === null) {
+        return;
+      } else if (e.key === "ArrowRight") {
+        handlerOnNext();
+      } else if (e.key === "ArrowLeft") {
+        handlerOnPrevious();
+      } else if (e.key === "Escape") {
+        setSelectedIndex(null);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selectedIndex, handlerOnNext, handlerOnPrevious]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -197,7 +241,10 @@ const MenUniforms: FC = () => {
                 >
                   <Card className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2">
                     <CardHeader>
-                      <div className="h-48 relative mb-4 rounded-lg overflow-hidden">
+                      <div
+                        className="h-48 relative mb-4 rounded-lg overflow-hidden"
+                        onClick={() => setSelectedIndex(index)}
+                      >
                         <Image
                           src={category.image}
                           alt={category.title}
@@ -209,7 +256,7 @@ const MenUniforms: FC = () => {
                         {/* Logo in top-right */}
                         <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow-md">
                           <Image
-                            src="/images/SriSakthi.jpg"
+                            src={category.logo}
                             alt="Logo"
                             width={32}
                             height={32}
@@ -218,7 +265,7 @@ const MenUniforms: FC = () => {
 
                         {/* Unique Code in bottom-right */}
                         <div className="absolute bottom-2 right-2 z-10 bg-sky-200 text-xs  px-2 py-1 rounded font-semibold">
-                          {category.code}
+                          {category.code_ID}
                         </div>
                       </div>
                       {/* <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">
@@ -252,6 +299,72 @@ const MenUniforms: FC = () => {
         </div>
       </section>
       <ContactAdvertise></ContactAdvertise>
+
+      {/* Starting of Image Modal with Navigation */}
+      {selectedIndex !== null && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
+          {/* Navigation + Close Buttons */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handlerOnPrevious();
+            }}
+            className="absolute left-8 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg z-50"
+          >
+            <ChevronLeft className="w-6 h-6 text-black" />
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handlerOnNext();
+            }}
+            className="absolute right-8 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg z-50"
+          >
+            <ChevronRight className="w-6 h-6 text-black" />
+          </button>
+
+          <button
+            onClick={() => setSelectedIndex(null)}
+            className="absolute top-6 right-6 bg-white hover:bg-gray-100 rounded-full p-2 shadow-lg z-50"
+          >
+            <X className="w-6 h-6 text-black" />
+          </button>
+
+          {/* Image Container with Watermark */}
+          <div
+            // className="relative max-w-4xl w-full px-4"
+            className="relative top-2 right-2 bg-white/50 rounded-full"
+          >
+            <Image
+              src={mensCategories[selectedIndex].image}
+              alt={mensCategories[selectedIndex].title}
+              width={1200}
+              height={800}
+              className="w-full h-auto rounded-lg shadow-lg"
+            />
+
+            {/* Logo Watermark */}
+            <div className="absolute top-1 right-0 bg-white/70 rounded-full p-2 shadow-md">
+              <Image
+                // src="/images/SriSakthi.jpg"
+                src={mensCategories[selectedIndex].logo}
+                alt="Logo"
+                width={48}
+                height={48}
+                className="rounded-full"
+              />
+            </div>
+
+            {/* Code_ID Watermark */}
+            <div className="absolute bottom-4 right-4 bg-sky-200/80 text-sm px-3 py-1 rounded font-semibold shadow-md">
+              {mensCategories[selectedIndex].code_ID}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Ending of Image Modal with Navigation */}
     </div>
   );
 };
