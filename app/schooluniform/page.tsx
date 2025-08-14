@@ -12,6 +12,8 @@ interface SchoolCategory {
   description: string;
   features: string[];
   image: string;
+  code_ID: string;
+  logo: string;
 }
 
 const cardVariants = {
@@ -145,9 +147,9 @@ const SchoolUniforms: FC = () => {
       } else if (e.key === "Escape") {
         setSelectedIndex(null);
       }
-      window.addEventListener("keydown", handlerOnKey);
-      return () => window.removeEventListener("keydown", handlerOnKey);
     };
+    window.addEventListener("keydown", handlerOnKey);
+    return () => window.removeEventListener("keydown", handlerOnKey);
   }, [selectedIndex, handlerOnNext, handlerOnPrevious]);
 
   return (
@@ -335,7 +337,8 @@ const SchoolUniforms: FC = () => {
           {/* Image Container with Watermark */}
           <div
             // className="relative max-w-4xl w-full px-4"
-            className="relative top-2 right-2 bg-white/50 rounded-full"
+            // className="relative top-2 right-2 bg-white/50 rounded-full"
+            className="relative w-64 h-74 overflow-hidden"
           >
             <Image
               src={schoolCategories[selectedIndex].image}
