@@ -14,6 +14,7 @@ interface OtherCategory {
   features: string[];
   image: string;
   code_ID: string;
+  logo: string;
 }
 
 const cardVariants = {
@@ -268,7 +269,10 @@ const OtherUniforms: FC = () => {
           </button>
 
           {/* Image Container with Watermark */}
-          <div className="relative max-w-4xl w-full px-4">
+          <div
+            // className="relative max-w-4xl w-full px-4"
+            className="relative w-64 h-74 overflow-hidden"
+          >
             <Image
               src={otherCategories[selectedIndex].image}
               alt={otherCategories[selectedIndex].title}

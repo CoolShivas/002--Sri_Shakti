@@ -2,9 +2,9 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import type { FC } from "react";
+import { useCallback, useEffect, useState, type FC } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ContactAdvertise from "@/components/ContactAdvertise";
 
 interface HotelCategory {
@@ -12,6 +12,8 @@ interface HotelCategory {
   description: string;
   features: string[];
   image: string;
+  code_ID: string;
+  logo: string;
 }
 
 const cardVariants = {
@@ -28,6 +30,8 @@ const cardVariants = {
 };
 
 const HotelUniforms: FC = () => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   const hotelCategories: HotelCategory[] = [
     {
       title: "Reception & Front Desk Uniforms",
@@ -40,7 +44,8 @@ const HotelUniforms: FC = () => {
         "Name badge and brand placement options",
         "Available in brand colors",
       ],
-      code: "HU-001",
+      code_ID: "HU-001",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Housekeeping Uniforms",
@@ -53,7 +58,8 @@ const HotelUniforms: FC = () => {
         "Functional pockets for tools",
         "Color-coded options for departments",
       ],
-      code: "HU-002",
+      code_ID: "HU-002",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Chef & Kitchen Staff Uniforms",
@@ -66,7 +72,8 @@ const HotelUniforms: FC = () => {
         "Adjustable closures for fit",
         "Easy to launder at high temperatures",
       ],
-      code: "HU-003",
+      code_ID: "HU-003",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Waitstaff & Service Uniforms",
@@ -79,7 +86,8 @@ const HotelUniforms: FC = () => {
         "Smart pocket placement for order pads and tools",
         "Designed to pair with non-slip footwear",
       ],
-      code: "HU-004",
+      code_ID: "HU-004",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Concierge & Managerial Uniforms",
@@ -92,7 +100,8 @@ const HotelUniforms: FC = () => {
         "Coordinated accessories (ties, scarves)",
         "Available in formal color palettes",
       ],
-      code: "HU-005",
+      code_ID: "HU-005",
+      logo: "/images/SriSakthi.jpg",
     },
     {
       title: "Spa & Wellness Uniforms",
@@ -105,9 +114,33 @@ const HotelUniforms: FC = () => {
         "Easy-care and quick-dry finishes",
         "Flexible fits suited for treatments",
       ],
-      code: "HU-006",
+      code_ID: "HU-006",
+      logo: "/images/SriSakthi.jpg",
     },
   ];
+
+  const handleNext = useCallback(() => {
+    if (selectedIndex === null) return;
+    setSelectedIndex((prev) => (prev! + 1) % hotelCategories.length);
+  }, [selectedIndex, hotelCategories.length]);
+
+  const handlePrev = useCallback(() => {
+    if (selectedIndex === null) return;
+    setSelectedIndex((prev) =>
+      prev! === 0 ? hotelCategories.length - 1 : prev! - 1
+    );
+  }, [selectedIndex, hotelCategories.length]);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (selectedIndex === null) return;
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "Escape") setSelectedIndex(null);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selectedIndex, handleNext, handlePrev]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -203,7 +236,10 @@ const HotelUniforms: FC = () => {
                 >
                   <Card className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2">
                     <CardHeader>
-                      <div className="h-48 relative mb-4 rounded-lg overflow-hidden">
+                      <div
+                        className="h-48 relative mb-4 rounded-lg overflow-hidden"
+                        onClick={() => setSelectedIndex(index)}
+                      >
                         <Image
                           src={category.image}
                           alt={category.title}
@@ -215,7 +251,7 @@ const HotelUniforms: FC = () => {
                         {/* Logo in top-right */}
                         <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow-md">
                           <Image
-                            src="/images/SriSakthi.jpg"
+                            src={category.logo}
                             alt="Logo"
                             width={32}
                             height={32}
@@ -224,7 +260,7 @@ const HotelUniforms: FC = () => {
 
                         {/* Unique Code in bottom-right */}
                         <div className="absolute bottom-2 right-2 z-10 bg-sky-200 text-xs  px-2 py-1 rounded font-semibold">
-                          {category.code}
+                          {category.code_ID}
                         </div>
                       </div>
                       {/* <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">
@@ -258,6 +294,70 @@ const HotelUniforms: FC = () => {
         </div>
       </section>
       <ContactAdvertise></ContactAdvertise>
+
+      {/* Image Modal with Navigation */}
+      {selectedIndex !== null && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
+          {/* Navigation + Close Buttons */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePrev();
+            }}
+            className="absolute left-8 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg z-50"
+          >
+            <ChevronLeft className="w-6 h-6 text-black" />
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNext();
+            }}
+            className="absolute right-8 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg z-50"
+          >
+            <ChevronRight className="w-6 h-6 text-black" />
+          </button>
+
+          <button
+            onClick={() => setSelectedIndex(null)}
+            className="absolute top-6 right-6 bg-white hover:bg-gray-100 rounded-full p-2 shadow-lg z-50"
+          >
+            <X className="w-6 h-6 text-black" />
+          </button>
+
+          {/* Image Container with Watermark */}
+          <div
+            // className="relative max-w-4xl w-full px-4"
+            className="relative w-64 h-74 overflow-hidden"
+          >
+            <Image
+              src={hotelCategories[selectedIndex].image}
+              alt={hotelCategories[selectedIndex].title}
+              width={1200}
+              height={800}
+              className="w-full h-auto rounded-lg shadow-lg"
+            />
+
+            {/* Logo Watermark */}
+            <div className="absolute top-4 right-4 bg-white/70 rounded-full p-2 shadow-md">
+              <Image
+                // src="/images/SriSakthi.jpg"
+                src={hotelCategories[selectedIndex].logo}
+                alt="Logo"
+                width={48}
+                height={48}
+                className="rounded-full"
+              />
+            </div>
+
+            {/* Code_ID Watermark */}
+            <div className="absolute bottom-4 right-4 bg-sky-200/80 text-sm px-3 py-1 rounded font-semibold shadow-md">
+              {hotelCategories[selectedIndex].code_ID}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
