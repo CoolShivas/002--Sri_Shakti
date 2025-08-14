@@ -195,6 +195,7 @@ const OtherUniforms: FC = () => {
                         fill
                         className="object-contain rounded-lg"
                         sizes="(max-width: 768px) 100vw, 33vw"
+                        priority
                       />
                       <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow-md">
                         <Image
@@ -202,6 +203,7 @@ const OtherUniforms: FC = () => {
                           alt="Logo"
                           width={32}
                           height={32}
+                          priority
                         />
                       </div>
                       <div className="absolute bottom-2 right-2 z-10 bg-sky-200 text-xs px-2 py-1 rounded font-semibold">
@@ -279,6 +281,7 @@ const OtherUniforms: FC = () => {
               width={1200}
               height={800}
               className="w-full h-auto rounded-lg shadow-lg"
+              priority
             />
 
             {/* Logo Watermark */}
@@ -290,6 +293,7 @@ const OtherUniforms: FC = () => {
                 width={48}
                 height={48}
                 className="rounded-full"
+                priority
               />
             </div>
 

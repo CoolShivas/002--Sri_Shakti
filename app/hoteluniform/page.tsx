@@ -255,6 +255,7 @@ const HotelUniforms: FC = () => {
                             alt="Logo"
                             width={32}
                             height={32}
+                            priority
                           />
                         </div>
 
@@ -336,6 +337,7 @@ const HotelUniforms: FC = () => {
               alt={hotelCategories[selectedIndex].title}
               width={1200}
               height={800}
+              priority
               className="w-full h-auto rounded-lg shadow-lg"
             />
 
@@ -348,6 +350,7 @@ const HotelUniforms: FC = () => {
                 width={48}
                 height={48}
                 className="rounded-full"
+                priority
               />
             </div>
 

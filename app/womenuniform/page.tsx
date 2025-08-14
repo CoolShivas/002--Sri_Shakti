@@ -251,6 +251,7 @@ const WomenUniforms: FC = () => {
                           fill
                           className="object-contain rounded-lg shadow-2xl"
                           sizes="(max-width: 768px) 100vw, 33vw"
+                          priority
                         />
                         {/* Logo in top-right */}
                         <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow-md">
@@ -259,6 +260,7 @@ const WomenUniforms: FC = () => {
                             alt="Logo"
                             width={32}
                             height={32}
+                            priority
                           />
                         </div>
 
@@ -338,6 +340,7 @@ const WomenUniforms: FC = () => {
               width={1200}
               height={800}
               className="w-full h-auto rounded-lg shadow-lg"
+              priority
             />
 
             {/* Logo Watermark */}
@@ -349,6 +352,7 @@ const WomenUniforms: FC = () => {
                 width={48}
                 height={48}
                 className="rounded-full"
+                priority
               />
             </div>
 

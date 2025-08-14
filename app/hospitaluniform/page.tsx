@@ -319,6 +319,7 @@ const HospitalUniforms: FC = () => {
                             alt="Logo"
                             width={32}
                             height={32}
+                            priority
                           />
                         </div>
 
@@ -401,6 +402,7 @@ const HospitalUniforms: FC = () => {
               width={1200}
               height={800}
               className="w-full h-auto rounded-lg shadow-lg"
+              priority
             />
 
             {/* Logo Watermark */}
@@ -412,6 +414,7 @@ const HospitalUniforms: FC = () => {
                 width={48}
                 height={48}
                 className="rounded-full"
+                priority
               />
             </div>
 
