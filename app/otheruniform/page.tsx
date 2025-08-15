@@ -125,14 +125,16 @@ const OtherUniforms: FC = () => {
             transition={{ delay: 0.5, duration: 0.8 }}
             className="max-w-5xl mx-auto"
           >
-            <Image
-              src="/images/hero-other-uniforms.jpg"
-              alt="Other Uniforms"
-              width={1200}
-              height={500}
-              className="w-full h-64 md:h-96 object-cover rounded-3xl shadow-lg border-4 border-white/20"
-              priority
-            />
+            <div className="relative w-full h-[50vh] md:h-[50vh] overflow-hidden rounded-3xl">
+              <Image
+                src="/images/hero-other-uniforms.jpg"
+                alt="Other Uniforms"
+                fill
+                sizes="(max-width: 768px) 100vw, 1200px"
+                className="object-cover"
+                priority
+              />
+            </div>
           </motion.div>
         </div>
       </section>
@@ -183,46 +185,48 @@ const OtherUniforms: FC = () => {
                 viewport={{ once: true }}
                 variants={cardVariants}
               >
-                <Card className="bg-gradient-to-br from-white to-blue-50 border border-gray-200 transition-all duration-300 rounded-xl group p-2 hover:shadow-2xl">
+                <Card className="bg-gradient-to-br from-white to-blue-50 border border-gray-200 transition-all duration-300 rounded-xl group p-2 hover:shadow-2xl cursor-pointer">
                   <CardHeader>
                     <div
-                      className="h-48 relative mb-4 rounded-lg overflow-hidden cursor-pointer"
+                      className="relative w-full h-64 flex items-center justify-center overflow-hidden"
                       onClick={() => setSelectedIndex(index)}
                     >
-                      <Image
-                        src={category.image}
-                        alt={category.title}
-                        fill
-                        className="object-contain rounded-lg"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        priority
-                      />
-                      <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow-md">
+                      <div className="relative w-full max-w-2xl max-h-[30vh] overflow-hidden">
                         <Image
-                          src={category.logo}
-                          alt="Logo"
-                          width={32}
-                          height={32}
+                          src={category.image}
+                          alt={category.title}
+                          width={1200}
+                          height={800}
+                          className="w-full h-auto rounded-lg shadow-lg"
                           priority
                         />
-                      </div>
-                      <div className="absolute bottom-2 right-2 z-10 bg-sky-200 text-xs px-2 py-1 rounded font-semibold">
-                        {category.code_ID}
+                        <div className="absolute top-4 right-4 bg-white/70 rounded-full p-2 shadow-md">
+                          <Image
+                            src={category.logo}
+                            alt="Logo"
+                            width={32}
+                            height={32}
+                            priority
+                          />
+                        </div>
+                        <div className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
+                          {category.code_ID}
+                        </div>
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center">
+                    <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2">
                       {category.title}
                     </h3>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4 text-center">
+                    <p className="text-gray-700 mb-4 text-center text-md font-semibold">
                       {category.description}
                     </p>
                     <ul className="space-y-2">
                       {category.features.map((feature, featureIndex) => (
                         <li
                           key={featureIndex}
-                          className="flex items-center text-sm text-gray-500"
+                          className="flex items-center text-md text-gray-700 font-semibold"
                         >
                           <CheckCircle className="w-4 h-4 text-brand-blue mr-2" />
                           {feature}
@@ -271,10 +275,7 @@ const OtherUniforms: FC = () => {
           </button>
 
           {/* Image Container with Watermark */}
-          <div
-            // className="relative max-w-4xl w-full px-4"
-            className="relative w-64 h-74 overflow-hidden"
-          >
+          <div className="relative w-full max-w-2xl max-h-[70vh] overflow-hidden">
             <Image
               src={otherCategories[selectedIndex].image}
               alt={otherCategories[selectedIndex].title}
@@ -298,7 +299,7 @@ const OtherUniforms: FC = () => {
             </div>
 
             {/* Code_ID Watermark */}
-            <div className="absolute bottom-4 right-4 bg-sky-200/80 text-sm px-3 py-1 rounded font-semibold shadow-md">
+            <div className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
               {otherCategories[selectedIndex].code_ID}
             </div>
           </div>
