@@ -1,4 +1,6 @@
 import React from "react";
+import SidebarLinks from "@/components/SidebarLinks";
+import ProductGrid from "@/components/ProductGrid";
 
 const UniformSuitings = () => {
   return (
@@ -9,8 +11,12 @@ const UniformSuitings = () => {
             Welcome to Uniform Suitings Page.
           </h1>
           <div className="grid md:grid-cols-4 gap-6">
-            <div className="md:col-span-1">SideBar</div>
-            <div className="md:col-span-3">ProductGrid</div>
+            <div className="md:col-span-1">
+              <SidebarLinks></SidebarLinks>
+            </div>
+            <div className="md:col-span-3">
+              <ProductGrid></ProductGrid>
+            </div>
           </div>
         </div>
       </section>
