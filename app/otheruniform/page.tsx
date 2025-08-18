@@ -185,13 +185,13 @@ const OtherUniforms: FC = () => {
                 viewport={{ once: true }}
                 variants={cardVariants}
               >
-                <Card className="bg-gradient-to-br from-white to-blue-50 border border-gray-200 transition-all duration-300 rounded-xl group p-2 hover:shadow-2xl cursor-pointer">
+                <Card className="bg-gradient-to-br from-white to-blue-50 border border-gray-200 transition-all duration-300 rounded-xl group p-2 hover:shadow-2xl">
                   <CardHeader>
                     <div
                       className="relative w-full h-64 flex items-center justify-center overflow-hidden"
                       onClick={() => setSelectedIndex(index)}
                     >
-                      <div className="relative w-full max-w-2xl max-h-[30vh] overflow-hidden">
+                      <div className="relative w-full max-w-2xl max-h-[30vh] overflow-hidden cursor-pointer">
                         <Image
                           src={category.image}
                           alt={category.title}
@@ -214,7 +214,7 @@ const OtherUniforms: FC = () => {
                         </div>
                       </div>
                     </div>
-                    <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2">
+                    <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
                       {category.title}
                     </h3>
                   </CardHeader>
