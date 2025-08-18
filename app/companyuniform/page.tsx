@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState, type FC } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ContactAdvertise from "@/components/ContactAdvertise";
+import Link from "next/link";
 
 interface CompanyCategory {
   title: string;
@@ -14,6 +15,7 @@ interface CompanyCategory {
   image: string;
   code_ID: string;
   logo: string;
+  subLink: string;
 }
 
 const cardVariants = {
@@ -46,6 +48,7 @@ const CompanyUniforms: FC = () => {
       ],
       code_ID: "CU-001",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/companyuniform/companyuniform",
     },
 
     {
@@ -61,6 +64,7 @@ const CompanyUniforms: FC = () => {
       ],
       code_ID: "CU-002",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/companyuniform/staffuniform",
     },
     {
       title: "Industrial Uniforms",
@@ -75,6 +79,7 @@ const CompanyUniforms: FC = () => {
       ],
       code_ID: "CU-003",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/companyuniform/industrialuniform",
     },
     {
       title: "Mechanic Uniforms",
@@ -89,6 +94,7 @@ const CompanyUniforms: FC = () => {
       ],
       code_ID: "CU-004",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/companyuniform/mechanicuniform",
     },
   ];
 
@@ -239,9 +245,11 @@ const CompanyUniforms: FC = () => {
                           </div>
                         </div>
                       </div>
-                      <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
-                        {category.title}
-                      </h3>
+                      <Link href={category.subLink}>
+                        <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
+                          {category.title}
+                        </h3>
+                      </Link>
                     </CardHeader>
                     <CardContent>
                       <p className="text-gray-700 mb-4 text-center text-md font-semibold">

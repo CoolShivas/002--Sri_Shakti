@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState, type FC } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ContactAdvertise from "@/components/ContactAdvertise";
+import Link from "next/link";
 
 interface HotelCategory {
   title: string;
@@ -14,6 +15,7 @@ interface HotelCategory {
   image: string;
   code_ID: string;
   logo: string;
+  subLink: string;
 }
 
 const cardVariants = {
@@ -46,6 +48,7 @@ const HotelUniforms: FC = () => {
       ],
       code_ID: "HU-001",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hoteluniform/receptionfrontdeskuniform",
     },
     {
       title: "Housekeeping Uniforms",
@@ -60,6 +63,7 @@ const HotelUniforms: FC = () => {
       ],
       code_ID: "HU-002",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hoteluniform/housekeepinguniform",
     },
     {
       title: "Chef & Kitchen Staff Uniforms",
@@ -74,6 +78,7 @@ const HotelUniforms: FC = () => {
       ],
       code_ID: "HU-003",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hoteluniform/chefkitchenstaffuniform",
     },
     {
       title: "Waitstaff & Service Uniforms",
@@ -88,6 +93,7 @@ const HotelUniforms: FC = () => {
       ],
       code_ID: "HU-004",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hoteluniform/waitstaffserviceuniform",
     },
     {
       title: "Concierge & Managerial Uniforms",
@@ -102,6 +108,7 @@ const HotelUniforms: FC = () => {
       ],
       code_ID: "HU-005",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hoteluniform/conciergemanagerialuniform",
     },
     {
       title: "Spa & Wellness Uniforms",
@@ -116,6 +123,7 @@ const HotelUniforms: FC = () => {
       ],
       code_ID: "HU-006",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hoteluniform/spawellnessuniform",
     },
   ];
 
@@ -268,9 +276,11 @@ const HotelUniforms: FC = () => {
                         </div>
                       </div>
 
-                      <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
-                        {category.title}
-                      </h3>
+                      <Link href={category.subLink}>
+                        <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
+                          {category.title}
+                        </h3>
+                      </Link>
                     </CardHeader>
                     <CardContent>
                       <p className="text-gray-700 mb-4 text-center text-md font-semibold">

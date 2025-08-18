@@ -7,6 +7,7 @@ import type { FC } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ContactAdvertise from "@/components/ContactAdvertise";
+import Link from "next/link";
 
 interface OtherCategory {
   title: string;
@@ -15,6 +16,7 @@ interface OtherCategory {
   image: string;
   code_ID: string;
   logo: string;
+  subLink: string;
 }
 
 const cardVariants = {
@@ -46,6 +48,7 @@ const OtherUniforms: FC = () => {
       ],
       code_ID: "OU-001",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/otheruniform/aviationcrewuniform",
     },
     {
       title: "Security Guard Uniforms",
@@ -59,6 +62,7 @@ const OtherUniforms: FC = () => {
       ],
       code_ID: "OU-002",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/otheruniform/securityguarduniform",
     },
     {
       title: "Sports Team Uniforms",
@@ -72,6 +76,7 @@ const OtherUniforms: FC = () => {
       ],
       code_ID: "OU-003",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/otheruniform/sportsteamuniform",
     },
   ];
 
@@ -214,9 +219,11 @@ const OtherUniforms: FC = () => {
                         </div>
                       </div>
                     </div>
-                    <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
-                      {category.title}
-                    </h3>
+                    <Link href={category.subLink}>
+                      <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
+                        {category.title}
+                      </h3>
+                    </Link>
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-700 mb-4 text-center text-md font-semibold">

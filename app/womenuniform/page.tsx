@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState, type FC } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ContactAdvertise from "@/components/ContactAdvertise";
+import Link from "next/link";
 
 interface WomenCategory {
   title: string;
@@ -14,6 +15,7 @@ interface WomenCategory {
   image: string;
   code_ID: string;
   logo: string;
+  subLink: string;
 }
 
 const cardVariants = {
@@ -46,6 +48,7 @@ const WomenUniforms: FC = () => {
       ],
       code_ID: "WU-001",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/womenuniform/teachersuniformsarees",
     },
     {
       title: "Staff Uniform Sarees",
@@ -60,6 +63,7 @@ const WomenUniforms: FC = () => {
       ],
       code_ID: "WU-002",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/womenuniform/staffuniformsarees",
     },
     {
       title: "Wedding Uniform Sarees",
@@ -74,6 +78,7 @@ const WomenUniforms: FC = () => {
       ],
       code_ID: "WU-003",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/womenuniform/weddinguniformsarees",
     },
     {
       title: "Plain Uniform Sarees",
@@ -83,6 +88,7 @@ const WomenUniforms: FC = () => {
       features: ["Solid colors", "Daily wear", "Easy care", "Budget-friendly"],
       code_ID: "WU-004",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/womenuniform/plainuniformsarees",
     },
     {
       title: "Set Sarees",
@@ -97,6 +103,7 @@ const WomenUniforms: FC = () => {
       ],
       code_ID: "WU-005",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/womenuniform/setsarees",
     },
     {
       title: "Uniform Chudithars",
@@ -111,6 +118,7 @@ const WomenUniforms: FC = () => {
       ],
       code_ID: "WU-006",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/womenuniform/uniformchudithars",
     },
   ];
 
@@ -272,9 +280,11 @@ const WomenUniforms: FC = () => {
                           </div>
                         </div>
                       </div>
-                      <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
-                        {category.title}
-                      </h3>
+                      <Link href={category.subLink}>
+                        <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
+                          {category.title}
+                        </h3>
+                      </Link>
                     </CardHeader>
                     <CardContent>
                       <p className="text-gray-700 mb-4 text-center text-md font-semibold">

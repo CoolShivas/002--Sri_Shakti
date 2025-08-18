@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Card, CardHeader } from "@/components/ui/card";
+import Link from "next/link";
 
 interface Category {
   title: string;
@@ -12,6 +13,7 @@ interface Category {
   items: string[];
   code_ID: string;
   logo: string;
+  subLink: string;
 }
 
 const cardVariants = {
@@ -37,6 +39,7 @@ const ProductCategories: FC = () => {
       items: ["Boys", "Girls", "Accessories"],
       code_ID: "PU-001",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/schooluniform",
     },
     {
       title: "Mens Uniforms",
@@ -44,6 +47,7 @@ const ProductCategories: FC = () => {
       items: ["Corporate", "Security", "Industrial"],
       code_ID: "PU-002",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/menuniform",
     },
     {
       title: "Womens Uniforms",
@@ -51,6 +55,7 @@ const ProductCategories: FC = () => {
       items: ["Formal", "Nursing", "Housekeeping"],
       code_ID: "PU-003",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/womenuniform",
     },
     {
       title: "Company Uniforms",
@@ -58,6 +63,7 @@ const ProductCategories: FC = () => {
       items: ["Logistics", "Technical", "Office Staff"],
       code_ID: "PU-004",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/companyuniform",
     },
     {
       title: "Hotel Uniforms",
@@ -65,6 +71,7 @@ const ProductCategories: FC = () => {
       items: ["Chef", "Housekeeping", "Reception"],
       code_ID: "PU-005",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hoteluniform",
     },
     {
       title: "Hospital Uniforms",
@@ -72,6 +79,7 @@ const ProductCategories: FC = () => {
       items: ["Doctors", "Nurses", "Support Staff"],
       code_ID: "PU-006",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform",
     },
   ];
 
@@ -188,9 +196,11 @@ const ProductCategories: FC = () => {
                         </div>
                       </div>
                     </div>
-                    <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
-                      {category.title}
-                    </h3>
+                    <Link href={category.subLink}>
+                      <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
+                        {category.title}
+                      </h3>
+                    </Link>
                   </CardHeader>
                 </Card>
               </motion.div>

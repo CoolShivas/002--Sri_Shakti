@@ -2,13 +2,13 @@ import React from "react";
 import SidebarLinks from "@/components/SidebarLinks";
 import ProductGrid from "@/components/ProductGrid";
 
-const GovtSchoolUniforms = () => {
+const NurseUniform = () => {
   return (
     <>
       <section className="py-10">
         <div className="container">
           <h1 className="text-2xl md:text-3xl font-bold mb-6">
-            Welcome to Government School Uniforms Page.
+            Welcome to Nurse Uniform Page.
           </h1>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="md:col-span-1">
@@ -24,4 +24,4 @@ const GovtSchoolUniforms = () => {
   );
 };
 
-export default GovtSchoolUniforms;
+export default NurseUniform;

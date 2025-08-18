@@ -36,6 +36,7 @@ export default function ProductGrid() {
           className="w-full h-auto rounded-lg shadow-lg"
           priority
         />
+
         <div className="p-3 text-sm text-gray-600">
           CODE: <span className="font-semibold">Unique Code of an image</span>
         </div>

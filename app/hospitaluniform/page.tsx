@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState, type FC } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ContactAdvertise from "@/components/ContactAdvertise";
+import Link from "next/link";
 
 interface HospitalCategory {
   title: string;
@@ -14,6 +15,7 @@ interface HospitalCategory {
   image: string;
   code_ID: string;
   logo: string;
+  subLink: string;
 }
 
 const cardVariants = {
@@ -47,6 +49,7 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-001",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/doctorcoat",
     },
     {
       title: "Nurse Uniforms",
@@ -61,6 +64,7 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-002",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/nurseuniform",
     },
     {
       title: "Operation Theatre Uniforms",
@@ -76,6 +80,7 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-003",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/operationtheatreuniform",
     },
     {
       title: "Hospital Uniform Sarees",
@@ -91,6 +96,7 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-004",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/hospitaluniformsaree",
     },
     {
       title: "Hospital Uniform Pants",
@@ -106,6 +112,7 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-005",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/hospitaluniformpant",
     },
     {
       title: "Hospital Uniform Shirts",
@@ -121,9 +128,10 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-006",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/hospitaluniformshirt",
     },
     {
-      title: "Mens Staff Uniforms",
+      title: "Men's Staff Uniforms",
       image: "/hospital_uniforms/Mens_Staff_Uniforms.png",
       description:
         "Durable and well-fitted uniforms tailored for male hospital staff, offering comfort, mobility, and a professional look for daily duties.",
@@ -136,6 +144,7 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-007",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/mensstaffuniform",
     },
     {
       title: "Staff Uniform Chudidhars",
@@ -151,6 +160,7 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-008",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/staffuniformchudidhar",
     },
     {
       title: "Doctor Uniform Sarees",
@@ -166,6 +176,7 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-009",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/doctoruniformsaree",
     },
     {
       title: "Hospital Uniforms",
@@ -181,6 +192,7 @@ const HospitalUniforms: FC = () => {
       ],
       code_ID: "HosU-0010",
       logo: "/images/SriSakthi.jpg",
+      subLink: "/hospitaluniform/hospitaluniform",
     },
   ];
 
@@ -329,9 +341,11 @@ const HospitalUniforms: FC = () => {
                           </div>
                         </div>
                       </div>
-                      <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
-                        {category.title}
-                      </h3>
+                      <Link href={category.subLink}>
+                        <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
+                          {category.title}
+                        </h3>
+                      </Link>
                     </CardHeader>
                     <CardContent>
                       <p className="text-gray-700 mb-4 text-center text-md font-semibold">
