@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Footer from "@/components/Footer";
 import { ReactNode } from "react";
+import { Providers } from "../app/redux/providers";
 
 export const metadata = {
   title: "Sri Sakthi Uniforms",
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="bg-white text-gray-900">
         <Header />
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen">
+          <Providers>{children}</Providers>
+        </main>
         <Footer />
       </body>
     </html>
