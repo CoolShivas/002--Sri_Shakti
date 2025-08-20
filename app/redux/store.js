@@ -1,5 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
+import uniformReducer from "./slice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    uniformData: uniformReducer,
+  },
 });
