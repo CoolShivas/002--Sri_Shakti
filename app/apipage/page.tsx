@@ -1,10 +1,33 @@
 "use client";
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchUniformApiServer } from "../redux/slice";
 
 const ApiPage = () => {
   const dispatch = useDispatch();
+
+  // const getFetchApiData = useSelector((data) => data);
+  // console.log(getFetchApiData);
+  // // // Getting data before btn click after refresh page on console as :-
+
+  // // // {uniformData: {…}}
+  // // // uniformData:
+  // // // uniformArr: Array(0)
+  // // // length: 0
+  // // // [[Prototype]]: Array(0)
+  // // // [[Prototype]]: Object
+  // // // [[Prototype]]: Object
+
+  // // // Getting data after btn click on console as :-
+  // // // {uniformData: {…}}
+  // // // uniformData: {uniformArr: Array(17), isloading: false}
+  // // // [[Prototype]]: Object
+
+  const getFetchApiData = useSelector((data) => data.uniformData.uniformArr);
+  console.log(getFetchApiData);
+  // // // Getting data before btn click after refresh page on console as :- []
+
+  // // // Getting data after btn click on console as :- (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
 
   const handlerOnGetApiBtn = () => {
     dispatch(fetchUniformApiServer()); // Attaching the action with the btn;
