@@ -8,6 +8,8 @@ const initialState = {
 export const fetchUniformApiServer = createAsyncThunk(
   "fetchUniformApiServer",
   async () => {
+    console.log("action");
+    // // // Getting the response of btn click here as :- action
     const response = await fetch(
       "https://backend-kwvs.onrender.com/api/uniforms/"
     );
@@ -31,7 +33,14 @@ const ApiSlice = createSlice({
   // // Formation of extraReducers for fetching api;
   extraReducers: (builder) => {
     builder.addCase(fetchUniformApiServer.fulfilled, (state, action) => {
-      (state.isloading = false), (state.uniformArr = action.payload);
+      console.log(
+        "reducer",
+        action
+      )(
+        // Getting the response of btn click here as :- reducer {type: 'fetchUniformApiServer/fulfilled', payload: Array(17), meta: {…}}
+        (state.isloading = false)
+      ),
+        (state.uniformArr = action.payload);
     });
   },
 });
