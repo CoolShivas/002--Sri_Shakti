@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import {
@@ -9,7 +9,7 @@ import {
 } from "../redux/slice";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
-import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import ContactAdvertise from "@/components/ContactAdvertise";
 
 const cardVariants = {
@@ -25,25 +25,67 @@ const SchoolUniformsPage = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state: any) => state.uniformData.isLoading);
   const error = useSelector((state: any) => state.uniformData.error);
-  const uniforms = useSelector(selectUniformsByTypeAndSubtype("school"));
 
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  // ✅ grab 1 item per subtype
+  const cbseUniforms = useSelector(
+    selectUniformsByTypeAndSubtype("school", "cbse")
+  );
+  const privateUniforms = useSelector(
+    selectUniformsByTypeAndSubtype("school", "private")
+  );
+  const govtUniforms = useSelector(
+    selectUniformsByTypeAndSubtype("school", "government")
+  );
+
+  const shirtingUniforms = useSelector(
+    selectUniformsByTypeAndSubtype("school", "shirting")
+  );
+
+  const suitingUniforms = useSelector(
+    selectUniformsByTypeAndSubtype("school", "suiting")
+  );
+
+  const plainUniforms = useSelector(
+    selectUniformsByTypeAndSubtype("school", "plain")
+  );
 
   useEffect(() => {
     dispatch(fetchUniformApiServer() as any);
   }, [dispatch]);
 
-  const handlerOnNext = () => {
-    if (selectedIndex === null || uniforms.length === 0) return;
-    setSelectedIndex((prev) => ((prev ?? 0) + 1) % uniforms.length);
-  };
-
-  const handlerOnPrevious = () => {
-    if (selectedIndex === null || uniforms.length === 0) return;
-    setSelectedIndex((prev) =>
-      prev === 0 ? uniforms.length - 1 : (prev ?? 0) - 1
-    );
-  };
+  // ✅ pick one sample from each subtype
+  const previews = [
+    {
+      label: "CBSE",
+      link: "/schooluniform/cbseschooluniform",
+      data: cbseUniforms[0],
+    },
+    {
+      label: "Private",
+      link: "/schooluniform/privateschooluniform",
+      data: privateUniforms[0],
+    },
+    {
+      label: "Government",
+      link: "/schooluniform/govtschooluniform",
+      data: govtUniforms[0],
+    },
+    {
+      label: "Uniform Shirtings",
+      link: "/schooluniform/uniformshirtings",
+      data: shirtingUniforms[0],
+    },
+    {
+      label: "Uniform Suitings",
+      link: "/schooluniform/uniformsuitings",
+      data: suitingUniforms[0],
+    },
+    {
+      label: "Plain",
+      link: "/schooluniform/plainschooluniform",
+      data: plainUniforms[0],
+    },
+  ].filter((p) => p.data); // only keep if data exists
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,7 +106,7 @@ const SchoolUniformsPage = () => {
             transition={{ delay: 0.3 }}
             className="mt-4 text-lg"
           >
-            Browse all school uniform options.
+            Browse our school uniform categories.
           </motion.p>
         </div>
       </section>
@@ -75,40 +117,49 @@ const SchoolUniformsPage = () => {
       )}
       {error && <div className="py-10 text-center text-red-500">{error}</div>}
 
-      {/* Cards Grid */}
+      {/* Cards Grid (1 per type) */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {uniforms.length > 0
-              ? uniforms.map((item: any, index: number) => (
+            {previews.length > 0
+              ? previews.map((preview, index) => (
                   <motion.div
-                    key={item._id ?? index}
+                    key={preview.label}
                     custom={index}
                     initial="hidden"
                     whileInView="visible"
                     variants={cardVariants}
                   >
-                    <Card className="shadow-lg rounded-2xl overflow-hidden">
-                      <CardHeader>
-                        <h3 className="text-xl font-semibold">{item.title}</h3>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="relative h-60">
-                          <Image
-                            src={item.image}
-                            alt={item.title}
-                            fill
-                            className="object-cover rounded-lg"
-                          />
-                        </div>
-                        <p className="mt-4 text-gray-700">{item.description}</p>
-                      </CardContent>
-                    </Card>
+                    <Link href={preview.link}>
+                      <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
+                        <CardHeader>
+                          <h3 className="text-xl font-semibold">
+                            {preview.data.title}
+                          </h3>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="relative h-60">
+                            <Image
+                              src={preview.data.image}
+                              alt={preview.data.title}
+                              fill
+                              className="object-cover rounded-lg"
+                            />
+                          </div>
+                          <p className="mt-4 text-gray-700 line-clamp-3">
+                            {preview.data.description}
+                          </p>
+                          <p className="mt-2 text-blue-600 font-semibold">
+                            View all {preview.label} uniforms →
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   </motion.div>
                 ))
               : !isLoading && (
                   <p className="text-center col-span-full text-gray-500">
-                    No school uniforms found.
+                    No uniforms found.
                   </p>
                 )}
           </div>
