@@ -1,42 +1,71 @@
-const { createSlice, nanoid, createAsyncThunk } = require("@reduxjs/toolkit");
+const {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} = require("@reduxjs/toolkit");
 
 const initialState = {
   uniformArr: [],
+  isLoading: false,
+  error: null,
 };
 
-///////**** Starting of creating the fetch api function with export *****///////
+///////**** Async thunk to fetch data *****///////
 export const fetchUniformApiServer = createAsyncThunk(
-  "fetchUniformApiServer",
+  "uniforms/fetchUniformApiServer",
   async () => {
-    // console.log("action");
-    // // // Getting the response of btn click here as :- action
     const response = await fetch(
       "https://backend-kwvs.onrender.com/api/uniforms/"
     );
     return response.json();
   }
 );
-///////**** Ending of creating the fetch api function with export *****///////
 
 const ApiSlice = createSlice({
   name: "uniformAPIes",
   initialState,
-  reducers: {
-    addUniforms: (state, action) => {
-      const data = {
-        id: nanoid(),
-        name: action.payload,
-      };
-      state.uniformArr.push(data);
-    },
-  },
-  // // Formation of extraReducers for fetching api;
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchUniformApiServer.fulfilled, (state, action) => {
-      (state.isloading = false), (state.uniformArr = action.payload);
-    });
+    builder
+      .addCase(fetchUniformApiServer.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchUniformApiServer.fulfilled, (state, action) => {
+        console.log(action); // Getting the data here;
+        state.isLoading = false;
+        state.uniformArr = action.payload;
+      })
+      .addCase(fetchUniformApiServer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      });
   },
 });
 
-export const { addUniforms } = ApiSlice.actions;
+///////**** Selectors for filtering *****///////
+
+// All uniforms
+export const selectAllUniforms = (state) => state.uniformData.uniformArr;
+
+// Filter by uniformType
+export const selectUniformsByType = (type) =>
+  createSelector([selectAllUniforms], (uniforms) =>
+    uniforms.filter((u) => u.uniformType === type)
+  );
+
+// Filter by uniformSubtype
+export const selectUniformsBySubtype = (subtype) =>
+  createSelector([selectAllUniforms], (uniforms) =>
+    uniforms.filter((u) => u.uniformSubtype === subtype)
+  );
+
+// Filter by both type + subtype
+export const selectUniformsByTypeAndSubtype = (type, subtype) =>
+  createSelector([selectAllUniforms], (uniforms) =>
+    uniforms.filter(
+      (u) => u.uniformType === type && u.uniformSubtype === subtype
+    )
+  );
+
 export default ApiSlice.reducer;
