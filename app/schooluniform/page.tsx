@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import {
   fetchUniformApiServer,
+  selectAllUniforms,
   selectUniformsByTypeAndSubtype,
 } from "../redux/slice";
+import { fetchLogoHeroBgImageServer } from "../redux/thirdSlice"; // Adjust path
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,75 +25,107 @@ const cardVariants = {
 
 const SchoolUniformsPage = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector((state: any) => state.uniformData.isLoading);
-  const error = useSelector((state: any) => state.uniformData.error);
-
-  // ✅ grab 1 item per subtype
-  const cbseUniforms = useSelector(
-    selectUniformsByTypeAndSubtype("school", "cbse")
+  const isLoading = useSelector(
+    (state) => state?.uniformData?.isLoading ?? false
   );
-  const privateUniforms = useSelector(
-    selectUniformsByTypeAndSubtype("school", "private")
+  const error = useSelector((state) => state?.uniformData?.error ?? null);
+  const logoHeroStatus = useSelector(
+    (state) => state?.logoHeroImages?.status ?? "idle"
   );
-  const govtUniforms = useSelector(
-    selectUniformsByTypeAndSubtype("school", "government")
-  );
-
-  const shirtingUniforms = useSelector(
-    selectUniformsByTypeAndSubtype("school", "shirting")
+  const logoHeroArr = useSelector((state) =>
+    Array.isArray(state?.logoHeroImages?.logoHeroArr)
+      ? state.logoHeroImages.logoHeroArr
+      : []
   );
 
-  const suitingUniforms = useSelector(
-    selectUniformsByTypeAndSubtype("school", "suiting")
+  // Fetch all uniforms once
+  const allUniforms = useSelector(selectAllUniforms);
+
+  // Memoize uniform types
+  const uniformTypes = useMemo(
+    () => [
+      { type: "school", subtype: "cbse" },
+      { type: "school", subtype: "private" },
+      { type: "school", subtype: "government" },
+      { type: "school", subtype: "shirting" },
+      { type: "school", subtype: "suiting" },
+      { type: "school", subtype: "plain" },
+    ],
+    []
   );
 
-  const plainUniforms = useSelector(
-    selectUniformsByTypeAndSubtype("school", "plain")
+  // Process uniforms for each subtype
+  const previews = useMemo(
+    () =>
+      uniformTypes
+        .map(({ subtype }, index) => {
+          const uniformData = selectUniformsByTypeAndSubtype(
+            { uniformData: { uniformArr: allUniforms } },
+            "school",
+            subtype
+          );
+          return {
+            label: subtype.charAt(0).toUpperCase() + subtype.slice(1),
+            link: `/schooluniform/${subtype}schooluniform`,
+            data: uniformData[0],
+          };
+        })
+        .filter((p) => p.data),
+    [allUniforms, uniformTypes]
   );
 
   useEffect(() => {
-    dispatch(fetchUniformApiServer() as any);
+    dispatch(fetchUniformApiServer());
+    dispatch(fetchLogoHeroBgImageServer());
   }, [dispatch]);
 
-  // ✅ pick one sample from each subtype
-  const previews = [
-    {
-      label: "CBSE",
-      link: "/schooluniform/cbseschooluniform",
-      data: cbseUniforms[0],
-    },
-    {
-      label: "Private",
-      link: "/schooluniform/privateschooluniform",
-      data: privateUniforms[0],
-    },
-    {
-      label: "Government",
-      link: "/schooluniform/govtschooluniform",
-      data: govtUniforms[0],
-    },
-    {
-      label: "Uniform Shirtings",
-      link: "/schooluniform/uniformshirtings",
-      data: shirtingUniforms[0],
-    },
-    {
-      label: "Uniform Suitings",
-      link: "/schooluniform/uniformsuitings",
-      data: suitingUniforms[0],
-    },
-    {
-      label: "Plain",
-      link: "/schooluniform/plainschooluniform",
-      data: plainUniforms[0],
-    },
-  ].filter((p) => p.data); // only keep if data exists
+  // Find logo (type: "logo") and hero image (name: "school-hero-section", type: "background")
+  const logoItem = logoHeroArr.find((item) => item?.type === "logo");
+  const heroItem = logoHeroArr.find(
+    (item) =>
+      item?.name === "school-hero-section" && item?.type === "background"
+  );
+
+  const logoUrl = logoItem?.url || "/placeholder-logo.png";
+  const heroImageUrl = heroItem?.url || "/placeholder-hero.jpg";
 
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-rose-500 via-pink-500 to-indigo-500 text-white">
-        <div className="container mx-auto text-center">
+      <section
+        className="relative py-20 text-white"
+        style={{
+          backgroundImage: `url(${heroImageUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40" />{" "}
+        {/* Overlay for text readability */}
+        <div className="container mx-auto text-center relative z-10">
+          {logoHeroStatus === "loading" ? (
+            <p className="text-center mb-4">Loading logo...</p>
+          ) : logoHeroStatus === "failed" ? (
+            <p className="text-center text-red-500 mb-4">
+              Error loading logo: {logoHeroStatus.error}
+            </p>
+          ) : !logoItem ? (
+            <p className="text-center text-yellow-500 mb-4">Logo not found</p>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="mb-4"
+            >
+              <img
+                src={logoUrl}
+                alt="Sri Sakthi Uniforms Logo"
+                className="h-16 w-auto rounded-full shadow-md object-contain mx-auto"
+              />
+            </motion.div>
+          )}
           <motion.h1
             initial={{ opacity: 0, y: -40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -144,6 +178,7 @@ const SchoolUniformsPage = () => {
                               alt={preview.data.title}
                               fill
                               className="object-cover rounded-lg"
+                              priority={index < 3} // Add priority for first 3 cards
                             />
                           </div>
                           <p className="mt-4 text-gray-700 line-clamp-3">

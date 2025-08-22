@@ -1,5 +1,8 @@
-// app/redux/slice.js
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} from "@reduxjs/toolkit";
 
 const initialState = {
   uniformArr: [],
@@ -12,7 +15,9 @@ export const fetchUniformApiServer = createAsyncThunk(
   async () => {
     const res = await fetch("https://backend-kwvs.onrender.com/api/uniforms/");
     if (!res.ok) throw new Error(`Error fetching uniforms: ${res.status}`);
-    return res.json();
+    const data = await res.json();
+    console.log("Uniforms API Response:", data); // Debug: Log API response
+    return data;
   }
 );
 
@@ -32,10 +37,12 @@ const slice = createSlice({
       .addCase(fetchUniformApiServer.fulfilled, (state, action) => {
         state.isLoading = false;
         state.uniformArr = Array.isArray(action.payload) ? action.payload : [];
+        console.log("uniformArr set to:", state.uniformArr); // Debug: Log state update
       })
       .addCase(fetchUniformApiServer.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error?.message || "Failed to fetch uniforms";
+        console.log("Uniforms Error:", state.error); // Debug: Log error
       });
   },
 });
@@ -45,31 +52,41 @@ export default slice.reducer;
 /**
  * Select ALL uniforms
  */
-export const selectAllUniforms = (state) => state.uniformData?.uniformArr ?? [];
+export const selectAllUniforms = createSelector(
+  [(state) => state.uniformData?.uniformArr ?? []],
+  (uniformArr) => {
+    console.log("selectAllUniforms result:", uniformArr); // Debug: Log result
+    return uniformArr;
+  }
+);
 
 /**
  * Select by type (case-insensitive; allows partial matches e.g. "school" matches "School")
  */
-export const selectUniformsByType = (type) => (state) => {
-  const t = norm(type);
-  return selectAllUniforms(state).filter((u) => {
-    const ut = norm(u.uniformType ?? u.type);
-    return ut && (ut === t || ut.includes(t));
-  });
-};
+export const selectUniformsByType = createSelector(
+  [selectAllUniforms, (state, type) => type],
+  (uniformArr, type) => {
+    const t = norm(type);
+    const result = uniformArr.filter((u) => {
+      const ut = norm(u.uniformType ?? u.type);
+      return ut && (ut === t || ut.includes(t));
+    });
+    console.log(`selectUniformsByType(${type}) result:`, result); // Debug: Log result
+    return result;
+  }
+);
 
 /**
  * Select by type + optional subtype.
  * - Matches case-insensitively and with partial includes.
  * - If subtype is provided but missing on the item, we fallback to checking name/title for that word.
  */
-export const selectUniformsByTypeAndSubtype =
-  (type, subtype = null) =>
-  (state) => {
+export const selectUniformsByTypeAndSubtype = createSelector(
+  [selectAllUniforms, (state, type, subtype) => ({ type, subtype })],
+  (uniformArr, { type, subtype }) => {
     const t = norm(type);
     const st = norm(subtype);
-
-    return selectAllUniforms(state).filter((u) => {
+    const result = uniformArr.filter((u) => {
       const ut = norm(u.uniformType ?? u.type);
       if (!ut || (ut !== t && !ut.includes(t))) return false;
 
@@ -92,4 +109,10 @@ export const selectUniformsByTypeAndSubtype =
 
       return inNameOrTitle;
     });
-  };
+    console.log(
+      `selectUniformsByTypeAndSubtype(${type}, ${subtype}) result:`,
+      result
+    ); // Debug: Log result
+    return result;
+  }
+);
