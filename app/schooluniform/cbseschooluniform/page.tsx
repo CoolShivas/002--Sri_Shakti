@@ -1,10 +1,8 @@
-// // Having Quick Links in sidebar of all Sub - Pages related to School.
-
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   fetchUniformApiServer,
   selectUniformsByTypeAndSubtype,
@@ -12,8 +10,9 @@ import {
 import { fetchLogoHeroBgImageServer } from "../../redux/thirdSlice";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
-import Link from "next/link";
+import SidebarLinks from "@/components/SidebarLinks";
 import ContactAdvertise from "@/components/ContactAdvertise";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -27,148 +26,86 @@ const cardVariants = {
 const CBSESchoolUniformsPage = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(
-    (state) => state?.uniformData?.isLoading ?? false
+    (state: any) => state?.uniformData?.isLoading ?? false
   );
-  const error = useSelector((state) => state?.uniformData?.error ?? null);
-  const logoHeroStatus = useSelector(
-    (state) => state?.logoHeroImages?.status ?? "idle"
-  );
-  const logoHeroArr = useSelector((state) =>
-    Array.isArray(state?.logoHeroImages?.logoHeroArr)
-      ? state.logoHeroImages.logoHeroArr
-      : []
-  );
+  const error = useSelector((state: any) => state?.uniformData?.error ?? null);
 
-  const uniforms = useSelector((state) =>
+  const uniforms = useSelector((state: any) =>
     selectUniformsByTypeAndSubtype(state, "school", "cbse")
   );
+
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     dispatch(fetchUniformApiServer());
     dispatch(fetchLogoHeroBgImageServer());
   }, [dispatch]);
 
-  const logoItem = logoHeroArr.find((item) => item?.type === "logo");
-  const heroItem = logoHeroArr.find(
-    (item) =>
-      item?.name === "school-hero-section" && item?.type === "background"
+  // Handle keyboard navigation
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (selectedIndex === null) return;
+
+      if (e.key === "ArrowRight") {
+        setSelectedIndex((prev) =>
+          prev === null ? null : (prev + 1) % uniforms.length
+        );
+      } else if (e.key === "ArrowLeft") {
+        setSelectedIndex((prev) =>
+          prev === null ? null : (prev - 1 + uniforms.length) % uniforms.length
+        );
+      } else if (e.key === "Escape") {
+        setSelectedIndex(null);
+      }
+    },
+    [selectedIndex, uniforms.length]
   );
 
-  const logoUrl = logoItem?.url || "/placeholder-logo.png";
-  const heroImageUrl = heroItem?.url || "/placeholder-hero.jpg";
+  useEffect(() => {
+    if (selectedIndex !== null) {
+      window.addEventListener("keydown", handleKeyDown);
+    } else {
+      window.removeEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex, handleKeyDown]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
-      {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-white p-6 shadow-lg rounded-lg mb-6 md:mb-0 md:mr-6 hidden md:block">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Links</h2>
-        <ul className="space-y-3">
-          {[
-            { subtype: "cbse", label: "CBSE Uniforms" },
-            { subtype: "private", label: "Private Uniforms" },
-            { subtype: "government", label: "Government Uniforms" },
-            { subtype: "shirting", label: "Uniform Shirtings" },
-            { subtype: "suiting", label: "Uniform Suitings" },
-            { subtype: "plain", label: "Plain Uniforms" },
-          ].map(({ subtype, label }) => (
-            <li key={subtype}>
-              <Link
-                href={`/schooluniform/${subtype}schooluniform`}
-                className="text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200"
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <h2 className="text-xl font-bold text-gray-800 mt-6 mb-4">
-          Recommendation
-        </h2>
-        <Link
-          href="/schooluniform/bestsellers"
-          className="text-green-600 hover:text-green-800 hover:underline block font-semibold transition-colors duration-200"
-        >
-          Best Sellers
-        </Link>
-      </aside>
+    <div className="min-h-screen bg-gray-50">
+      {/* Main Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-6">
+            {/* Sidebar */}
+            <div className="md:col-span-1 bg-white p-6 shadow-lg rounded-lg">
+              <SidebarLinks />
+            </div>
 
-      {/* Main Content */}
-      <main className="flex-1">
-        <section
-          className="relative py-20 text-white"
-          style={{
-            backgroundImage: `url(${heroImageUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="container mx-auto text-center relative z-10">
-            {logoHeroStatus === "loading" ? (
-              <p className="text-center mb-4">Loading logo...</p>
-            ) : logoHeroStatus === "failed" ? (
-              <p className="text-center text-red-500 mb-4">
-                Error loading logo: {logoHeroStatus.error}
-              </p>
-            ) : !logoItem ? (
-              <p className="text-center text-yellow-500 mb-4">Logo not found</p>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                className="mb-4"
-              >
-                <img
-                  src={logoUrl}
-                  alt="Sri Sakthi Uniforms Logo"
-                  className="h-16 w-auto rounded-full shadow-md object-contain mx-auto"
-                />
-              </motion.div>
-            )}
-            <motion.h1
-              initial={{ opacity: 0, y: -40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-5xl font-extrabold"
-            >
-              CBSE School Uniforms
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mt-4 text-lg"
-            >
-              Explore our collection of CBSE school uniforms.
-            </motion.p>
-          </div>
-        </section>
+            {/* Uniform Cards */}
+            <div className="md:col-span-3">
+              {isLoading && (
+                <div className="py-10 text-center text-lg">
+                  Loading uniforms...
+                </div>
+              )}
+              {error && (
+                <div className="py-10 text-center text-red-500">{error}</div>
+              )}
 
-        {isLoading && (
-          <div className="py-10 text-center text-lg">Loading uniforms...</div>
-        )}
-        {error && <div className="py-10 text-center text-red-500">{error}</div>}
-
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {uniforms.length > 0
-                ? uniforms.map((uniform, index) => (
-                    <motion.div
-                      key={uniform.id || index}
-                      custom={index}
-                      initial="hidden"
-                      whileInView="visible"
-                      variants={cardVariants}
-                    >
-                      <Link
-                        href={`/schooluniform/cbseschooluniform/${
-                          uniform.id || index
-                        }`}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {uniforms.length > 0
+                  ? uniforms.map((uniform: any, index: number) => (
+                      <motion.div
+                        key={uniform.id || index}
+                        custom={index}
+                        initial="hidden"
+                        whileInView="visible"
+                        variants={cardVariants}
                       >
-                        <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
+                        <Card
+                          className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+                          onClick={() => setSelectedIndex(index)}
+                        >
                           <CardHeader>
                             <h3 className="text-xl font-semibold">
                               {uniform.title}
@@ -187,148 +124,81 @@ const CBSESchoolUniformsPage = () => {
                             <p className="mt-4 text-gray-700 line-clamp-3">
                               {uniform.description}
                             </p>
-                            <p className="mt-2 text-blue-600 font-semibold">
-                              View details →
-                            </p>
                           </CardContent>
                         </Card>
-                      </Link>
-                    </motion.div>
-                  ))
-                : !isLoading && (
-                    <p className="text-center text-gray-500">
-                      No CBSE uniforms found.
-                    </p>
-                  )}
+                      </motion.div>
+                    ))
+                  : !isLoading && (
+                      <p className="text-center text-gray-500">
+                        No CBSE uniforms found.
+                      </p>
+                    )}
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <ContactAdvertise />
-      </main>
+      {/* Modal Overlay */}
+      <AnimatePresence>
+        {selectedIndex !== null && (
+          <motion.div
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedIndex(null)}
+          >
+            <motion.div
+              className="relative max-w-4xl w-full px-6"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={uniforms[selectedIndex].image}
+                alt={uniforms[selectedIndex].title}
+                width={1000}
+                height={700}
+                className="rounded-lg object-contain mx-auto"
+              />
+              {/* Close Button */}
+              <button
+                className="absolute top-4 right-4 bg-black/60 p-2 rounded-full text-white"
+                onClick={() => setSelectedIndex(null)}
+              >
+                <X size={24} />
+              </button>
+              {/* Left Arrow */}
+              <button
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 p-2 rounded-full text-white"
+                onClick={() =>
+                  setSelectedIndex(
+                    (selectedIndex - 1 + uniforms.length) % uniforms.length
+                  )
+                }
+              >
+                <ChevronLeft size={28} />
+              </button>
+              {/* Right Arrow */}
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 p-2 rounded-full text-white"
+                onClick={() =>
+                  setSelectedIndex((selectedIndex + 1) % uniforms.length)
+                }
+              >
+                <ChevronRight size={28} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <ContactAdvertise />
     </div>
   );
 };
 
 export default CBSESchoolUniformsPage;
-
-////////******************************************************************************************** *////////
-
-// // // Having Quick Links in sidebar of all Main Page.
-
-// "use client";
-
-// import { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { motion } from "framer-motion";
-// import {
-//   fetchUniformApiServer,
-//   selectUniformsByTypeAndSubtype,
-// } from "../../redux/slice";
-// import { Card, CardContent, CardHeader } from "@/components/ui/card";
-// import Image from "next/image";
-// import Link from "next/link";
-// import SidebarLinks from "@/components/SidebarLinks";
-// import ContactAdvertise from "@/components/ContactAdvertise";
-
-// const cardVariants = {
-//   hidden: { opacity: 0, y: 40 },
-//   visible: (i: number) => ({
-//     opacity: 1,
-//     y: 0,
-//     transition: { delay: i * 0.1, duration: 0.6, type: "spring" },
-//   }),
-// };
-
-// const CBSESchoolUniformsPage = () => {
-//   const dispatch = useDispatch();
-//   const isLoading = useSelector(
-//     (state) => state?.uniformData?.isLoading ?? false
-//   );
-//   const error = useSelector((state) => state?.uniformData?.error ?? null);
-//   const uniforms = useSelector((state) =>
-//     selectUniformsByTypeAndSubtype(state, "school", "cbse")
-//   );
-
-//   useEffect(() => {
-//     dispatch(fetchUniformApiServer());
-//   }, [dispatch]);
-
-//   return (
-//     <div className="min-h-screen bg-gray-50">
-//       <section className="py-10">
-//         <div className="container mx-auto px-4">
-//           <h1 className="text-2xl md:text-3xl font-bold mb-6">
-//             CBSE School Uniforms
-//           </h1>
-//           <div className="grid md:grid-cols-4 gap-6">
-//             <div className="md:col-span-1 bg-white p-6 shadow-lg rounded-lg">
-//               <SidebarLinks />
-//             </div>
-//             <div className="md:col-span-3">
-//               {isLoading && (
-//                 <div className="py-10 text-center text-lg">
-//                   Loading uniforms...
-//                 </div>
-//               )}
-//               {error && (
-//                 <div className="py-10 text-center text-red-500">{error}</div>
-//               )}
-//               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-//                 {uniforms.length > 0
-//                   ? uniforms.map((uniform, index) => (
-//                       <motion.div
-//                         key={uniform.id || index}
-//                         custom={index}
-//                         initial="hidden"
-//                         whileInView="visible"
-//                         variants={cardVariants}
-//                       >
-//                         <Link
-//                           href={`/schooluniform/cbseschooluniform/${
-//                             uniform.id || index
-//                           }`}
-//                         >
-//                           <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
-//                             <CardHeader>
-//                               <h3 className="text-xl font-semibold">
-//                                 {uniform.title}
-//                               </h3>
-//                             </CardHeader>
-//                             <CardContent>
-//                               <div className="relative h-60">
-//                                 <Image
-//                                   src={uniform.image}
-//                                   alt={uniform.title}
-//                                   fill
-//                                   className="object-cover rounded-lg"
-//                                   priority={index < 3}
-//                                 />
-//                               </div>
-//                               <p className="mt-4 text-gray-700 line-clamp-3">
-//                                 {uniform.description}
-//                               </p>
-//                               <p className="mt-2 text-blue-600 font-semibold">
-//                                 View details →
-//                               </p>
-//                             </CardContent>
-//                           </Card>
-//                         </Link>
-//                       </motion.div>
-//                     ))
-//                   : !isLoading && (
-//                       <p className="text-center text-gray-500">
-//                         No CBSE uniforms found.
-//                       </p>
-//                     )}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-//       <ContactAdvertise />
-//     </div>
-//   );
-// };
-
-// export default CBSESchoolUniformsPage;

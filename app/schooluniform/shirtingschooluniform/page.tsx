@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   fetchUniformApiServer,
   selectUniformsByTypeAndSubtype,
@@ -10,8 +10,9 @@ import {
 import { fetchLogoHeroBgImageServer } from "../../redux/thirdSlice";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
-import Link from "next/link";
+import SidebarLinks from "@/components/SidebarLinks";
 import ContactAdvertise from "@/components/ContactAdvertise";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -28,9 +29,7 @@ const UniformShirtingsPage = () => {
     (state) => state?.uniformData?.isLoading ?? false
   );
   const error = useSelector((state) => state?.uniformData?.error ?? null);
-  const logoHeroStatus = useSelector(
-    (state) => state?.logoHeroImages?.status ?? "idle"
-  );
+
   const logoHeroArr = useSelector((state) =>
     Array.isArray(state?.logoHeroImages?.logoHeroArr)
       ? state.logoHeroImages.logoHeroArr
@@ -47,126 +46,71 @@ const UniformShirtingsPage = () => {
   }, [dispatch]);
 
   const logoItem = logoHeroArr.find((item) => item?.type === "logo");
-  const heroItem = logoHeroArr.find(
-    (item) =>
-      item?.name === "school-hero-section" && item?.type === "background"
-  );
-
   const logoUrl = logoItem?.url || "/placeholder-logo.png";
-  const heroImageUrl = heroItem?.url || "/placeholder-hero.jpg";
+
+  // Modal State
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (selectedIndex === null) return;
+    if (e.key === "ArrowRight") {
+      setSelectedIndex((prev) =>
+        prev !== null ? (prev + 1) % uniforms.length : null
+      );
+    } else if (e.key === "ArrowLeft") {
+      setSelectedIndex((prev) =>
+        prev !== null ? (prev - 1 + uniforms.length) % uniforms.length : null
+      );
+    } else if (e.key === "Escape") {
+      setSelectedIndex(null);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedIndex !== null) {
+      window.addEventListener("keydown", handleKeyDown);
+    } else {
+      window.removeEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex, uniforms.length]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
-      {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-white p-6 shadow-lg rounded-lg mb-6 md:mb-0 md:mr-6 hidden md:block">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Links</h2>
-        <ul className="space-y-3">
-          {[
-            { subtype: "cbse", label: "CBSE Uniforms" },
-            { subtype: "private", label: "Private Uniforms" },
-            { subtype: "government", label: "Government Uniforms" },
-            { subtype: "shirting", label: "Uniform Shirtings" },
-            { subtype: "suiting", label: "Uniform Suitings" },
-            { subtype: "plain", label: "Plain Uniforms" },
-          ].map(({ subtype, label }) => (
-            <li key={subtype}>
-              <Link
-                href={`/schooluniform/${subtype}schooluniform`}
-                className="text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200"
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <h2 className="text-xl font-bold text-gray-800 mt-6 mb-4">
-          Recommendation
-        </h2>
-        <Link
-          href="/schooluniform/bestsellers"
-          className="text-green-600 hover:text-green-800 hover:underline block font-semibold transition-colors duration-200"
-        >
-          Best Sellers
-        </Link>
-      </aside>
+    <div className="min-h-screen bg-gray-50">
+      {/* Main Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-6">
+            {/* Sidebar */}
+            <div className="md:col-span-1 bg-white p-6 shadow-lg rounded-lg">
+              <SidebarLinks />
+            </div>
 
-      {/* Main Content */}
-      <main className="flex-1">
-        <section
-          className="relative py-20 text-white"
-          style={{
-            backgroundImage: `url(${heroImageUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="container mx-auto text-center relative z-10">
-            {logoHeroStatus === "loading" ? (
-              <p className="text-center mb-4">Loading logo...</p>
-            ) : logoHeroStatus === "failed" ? (
-              <p className="text-center text-red-500 mb-4">
-                Error loading logo: {logoHeroStatus.error}
-              </p>
-            ) : !logoItem ? (
-              <p className="text-center text-yellow-500 mb-4">Logo not found</p>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                className="mb-4"
-              >
-                <img
-                  src={logoUrl}
-                  alt="Sri Sakthi Uniforms Logo"
-                  className="h-16 w-auto rounded-full shadow-md object-contain mx-auto"
-                />
-              </motion.div>
-            )}
-            <motion.h1
-              initial={{ opacity: 0, y: -40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-5xl font-extrabold"
-            >
-              Uniform Shirtings
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mt-4 text-lg"
-            >
-              Explore our collection of Uniform shirtings.
-            </motion.p>
-          </div>
-        </section>
+            {/* Uniform Cards */}
+            <div className="md:col-span-3">
+              {isLoading && (
+                <div className="py-10 text-center text-lg">
+                  Loading uniforms...
+                </div>
+              )}
+              {error && (
+                <div className="py-10 text-center text-red-500">{error}</div>
+              )}
 
-        {isLoading && (
-          <div className="py-10 text-center text-lg">Loading uniforms...</div>
-        )}
-        {error && <div className="py-10 text-center text-red-500">{error}</div>}
-
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {uniforms.length > 0
-                ? uniforms.map((uniform, index) => (
-                    <motion.div
-                      key={uniform.id || index}
-                      custom={index}
-                      initial="hidden"
-                      whileInView="visible"
-                      variants={cardVariants}
-                    >
-                      <Link
-                        href={`/schooluniform/uniformshirtings/${
-                          uniform.id || index
-                        }`}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {uniforms.length > 0
+                  ? uniforms.map((uniform, index) => (
+                      <motion.div
+                        key={uniform.id || index}
+                        custom={index}
+                        initial="hidden"
+                        whileInView="visible"
+                        variants={cardVariants}
                       >
-                        <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
+                        <Card
+                          className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+                          onClick={() => setSelectedIndex(index)}
+                        >
                           <CardHeader>
                             <h3 className="text-xl font-semibold">
                               {uniform.title}
@@ -181,29 +125,96 @@ const UniformShirtingsPage = () => {
                                 className="object-cover rounded-lg"
                                 priority={index < 3}
                               />
+                              {/* Overlay Logo */}
+                              {logoUrl && (
+                                <div className="absolute bottom-2 right-2 bg-white/80 p-1 rounded-full shadow-md">
+                                  <img
+                                    src={logoUrl}
+                                    alt="Logo"
+                                    className="h-10 w-10 object-contain"
+                                  />
+                                </div>
+                              )}
                             </div>
                             <p className="mt-4 text-gray-700 line-clamp-3">
                               {uniform.description}
                             </p>
-                            <p className="mt-2 text-blue-600 font-semibold">
-                              View details →
-                            </p>
                           </CardContent>
                         </Card>
-                      </Link>
-                    </motion.div>
-                  ))
-                : !isLoading && (
-                    <p className="text-center text-gray-500">
-                      No Shirtings uniforms found.
-                    </p>
-                  )}
+                      </motion.div>
+                    ))
+                  : !isLoading && (
+                      <p className="text-center text-gray-500">
+                        No Shirtings uniforms found.
+                      </p>
+                    )}
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <ContactAdvertise />
-      </main>
+      <ContactAdvertise />
+
+      {/* Image Modal */}
+      <AnimatePresence>
+        {selectedIndex !== null && uniforms[selectedIndex] && (
+          <motion.div
+            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedIndex(null)}
+          >
+            <motion.div
+              className="relative max-w-4xl w-full mx-4"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={uniforms[selectedIndex].image}
+                alt={uniforms[selectedIndex].title}
+                width={1200}
+                height={800}
+                className="w-full h-auto rounded-lg object-contain"
+              />
+
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedIndex(null)}
+                className="absolute top-3 right-3 text-white bg-black/60 p-2 rounded-full hover:bg-black/80"
+              >
+                <X size={24} />
+              </button>
+
+              {/* Left Arrow */}
+              <button
+                onClick={() =>
+                  setSelectedIndex(
+                    (selectedIndex - 1 + uniforms.length) % uniforms.length
+                  )
+                }
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-white bg-black/60 p-2 rounded-full hover:bg-black/80"
+              >
+                <ChevronLeft size={28} />
+              </button>
+
+              {/* Right Arrow */}
+              <button
+                onClick={() =>
+                  setSelectedIndex((selectedIndex + 1) % uniforms.length)
+                }
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white bg-black/60 p-2 rounded-full hover:bg-black/80"
+              >
+                <ChevronRight size={28} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

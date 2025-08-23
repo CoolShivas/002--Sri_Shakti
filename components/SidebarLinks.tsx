@@ -9,9 +9,12 @@ const categorySubpages = {
     { label: "CBSE School", href: "/schooluniform/cbseschooluniform" },
     { label: "Private School", href: "/schooluniform/privateschooluniform" },
     { label: "Plain School", href: "/schooluniform/plainschooluniform" },
-    { label: "Government School", href: "/schooluniform/govtschooluniform" },
-    { label: "Shirtings", href: "/schooluniform/uniformshirtings" },
-    { label: "Suitings", href: "/schooluniform/uniformsuitings" },
+    {
+      label: "Government School",
+      href: "/schooluniform/governmentschooluniform",
+    },
+    { label: "Shirtings", href: "/schooluniform/shirtingschooluniform" },
+    { label: "Suitings", href: "/schooluniform/suitingschooluniform" },
   ],
   womenuniform: [
     { label: "Plain Sarees", href: "/womenuniform/plainuniformsarees" },

@@ -1,8 +1,6 @@
-// // Having Quick Links in sidebar of all Sub - Pages related to School.
-
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import {
@@ -12,8 +10,9 @@ import {
 import { fetchLogoHeroBgImageServer } from "../../redux/thirdSlice";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
-import Link from "next/link";
 import ContactAdvertise from "@/components/ContactAdvertise";
+import SidebarLinks from "@/components/SidebarLinks";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -24,22 +23,19 @@ const cardVariants = {
   }),
 };
 
-const SuitingSchoolUniformsPage = () => {
+const UniformSuitingPage = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(
-    (state) => state?.uniformData?.isLoading ?? false
+    (state: any) => state?.uniformData?.isLoading ?? false
   );
-  const error = useSelector((state) => state?.uniformData?.error ?? null);
-  const logoHeroStatus = useSelector(
-    (state) => state?.logoHeroImages?.status ?? "idle"
-  );
-  const logoHeroArr = useSelector((state) =>
+  const error = useSelector((state: any) => state?.uniformData?.error ?? null);
+  const logoHeroArr = useSelector((state: any) =>
     Array.isArray(state?.logoHeroImages?.logoHeroArr)
       ? state.logoHeroImages.logoHeroArr
       : []
   );
 
-  const uniforms = useSelector((state) =>
+  const uniforms = useSelector((state: any) =>
     selectUniformsByTypeAndSubtype(state, "school", "suiting")
   );
 
@@ -48,104 +44,50 @@ const SuitingSchoolUniformsPage = () => {
     dispatch(fetchLogoHeroBgImageServer());
   }, [dispatch]);
 
-  const logoItem = logoHeroArr.find((item) => item?.type === "logo");
-  const heroItem = logoHeroArr.find(
-    (item) =>
-      item?.name === "school-hero-section" && item?.type === "background"
-  );
-
+  const logoItem = logoHeroArr.find((item: any) => item?.type === "logo");
   const logoUrl = logoItem?.url || "/placeholder-logo.png";
-  const heroImageUrl = heroItem?.url || "/placeholder-hero.jpg";
+
+  // Modal States
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const closeModal = () => setSelectedIndex(null);
+
+  const showPrev = useCallback(() => {
+    if (uniforms.length && selectedIndex !== null) {
+      setSelectedIndex((prev) =>
+        prev === 0 ? uniforms.length - 1 : (prev as number) - 1
+      );
+    }
+  }, [uniforms, selectedIndex]);
+
+  const showNext = useCallback(() => {
+    if (uniforms.length && selectedIndex !== null) {
+      setSelectedIndex((prev) =>
+        prev === uniforms.length - 1 ? 0 : (prev as number) + 1
+      );
+    }
+  }, [uniforms, selectedIndex]);
+
+  // Keyboard Navigation
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (selectedIndex !== null) {
+        if (e.key === "ArrowLeft") showPrev();
+        if (e.key === "ArrowRight") showNext();
+        if (e.key === "Escape") closeModal();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selectedIndex, showPrev, showNext]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-white p-6 shadow-lg rounded-lg mb-6 md:mb-0 md:mr-6 hidden md:block">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Links</h2>
-        <ul className="space-y-3">
-          {[
-            { subtype: "cbse", label: "CBSE Uniforms" },
-            { subtype: "private", label: "Private Uniforms" },
-            { subtype: "government", label: "Government Uniforms" },
-            { subtype: "shirting", label: "Uniform Shirtings" },
-            { subtype: "suiting", label: "Uniform Suitings" },
-            { subtype: "plain", label: "Plain Uniforms" },
-          ].map(({ subtype, label }) => (
-            <li key={subtype}>
-              <Link
-                href={`/schooluniform/${subtype}schooluniform`}
-                className="text-blue-600 hover:text-blue-800 hover:underline transition-colors duration-200"
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <h2 className="text-xl font-bold text-gray-800 mt-6 mb-4">
-          Recommendation
-        </h2>
-        <Link
-          href="/schooluniform/bestsellers"
-          className="text-green-600 hover:text-green-800 hover:underline block font-semibold transition-colors duration-200"
-        >
-          Best Sellers
-        </Link>
-      </aside>
+      <SidebarLinks />
 
       {/* Main Content */}
       <main className="flex-1">
-        <section
-          className="relative py-20 text-white"
-          style={{
-            backgroundImage: `url(${heroImageUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="container mx-auto text-center relative z-10">
-            {logoHeroStatus === "loading" ? (
-              <p className="text-center mb-4">Loading logo...</p>
-            ) : logoHeroStatus === "failed" ? (
-              <p className="text-center text-red-500 mb-4">
-                Error loading logo: {logoHeroStatus.error}
-              </p>
-            ) : !logoItem ? (
-              <p className="text-center text-yellow-500 mb-4">Logo not found</p>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                className="mb-4"
-              >
-                <img
-                  src={logoUrl}
-                  alt="Sri Sakthi Uniforms Logo"
-                  className="h-16 w-auto rounded-full shadow-md object-contain mx-auto"
-                />
-              </motion.div>
-            )}
-            <motion.h1
-              initial={{ opacity: 0, y: -40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-5xl font-extrabold"
-            >
-              Suiting School Uniforms
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mt-4 text-lg"
-            >
-              Explore our collection of CBSE school uniforms.
-            </motion.p>
-          </div>
-        </section>
-
         {isLoading && (
           <div className="py-10 text-center text-lg">Loading uniforms...</div>
         )}
@@ -155,7 +97,7 @@ const SuitingSchoolUniformsPage = () => {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {uniforms.length > 0
-                ? uniforms.map((uniform, index) => (
+                ? uniforms.map((uniform: any, index: number) => (
                     <motion.div
                       key={uniform.id || index}
                       custom={index}
@@ -163,41 +105,49 @@ const SuitingSchoolUniformsPage = () => {
                       whileInView="visible"
                       variants={cardVariants}
                     >
-                      <Link
-                        href={`/schooluniform/cbseschooluniform/${
-                          uniform.id || index
-                        }`}
+                      <Card
+                        className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+                        onClick={() => setSelectedIndex(index)}
                       >
-                        <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
-                          <CardHeader>
-                            <h3 className="text-xl font-semibold">
-                              {uniform.title}
-                            </h3>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="relative h-60">
-                              <Image
-                                src={uniform.image}
-                                alt={uniform.title}
-                                fill
-                                className="object-cover rounded-lg"
-                                priority={index < 3}
+                        <CardHeader>
+                          <h3 className="text-xl font-semibold">
+                            {uniform.title}
+                          </h3>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="relative h-60">
+                            <Image
+                              src={uniform.image}
+                              alt={uniform.title}
+                              fill
+                              className="object-cover rounded-lg"
+                              priority={index < 3}
+                            />
+                            {/* Logo overlay on image */}
+                            <div className="absolute top-2 right-2 bg-white/80 p-1 rounded-full shadow">
+                              <img
+                                src={logoUrl}
+                                alt="Logo"
+                                className="h-8 w-8 object-contain"
                               />
                             </div>
-                            <p className="mt-4 text-gray-700 line-clamp-3">
-                              {uniform.description}
-                            </p>
-                            <p className="mt-2 text-blue-600 font-semibold">
-                              View details →
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </Link>
+                            <div className="absolute bottom-2 right-0 bg-sky-200/80 text-sm px-3 py-1 rounded font-semibold shadow-md">
+                              {uniform.uniformCode}
+                            </div>
+                          </div>
+                          <p className="mt-4 text-gray-700 line-clamp-3">
+                            {uniform.description}
+                          </p>
+                          <p className="mt-2 text-blue-600 font-semibold">
+                            View details →
+                          </p>
+                        </CardContent>
+                      </Card>
                     </motion.div>
                   ))
                 : !isLoading && (
                     <p className="text-center text-gray-500">
-                      No CBSE uniforms found.
+                      No Suiting uniforms found.
                     </p>
                   )}
             </div>
@@ -206,8 +156,67 @@ const SuitingSchoolUniformsPage = () => {
 
         <ContactAdvertise />
       </main>
+
+      {/* Modal */}
+      {selectedIndex !== null && (
+        <motion.div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          onClick={closeModal}
+        >
+          <motion.div
+            className="relative max-w-3xl w-full mx-4"
+            initial={{ scale: 0.7 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative w-full max-w-2xl max-h-[70vh] overflow-hidden">
+              <Image
+                src={uniforms[selectedIndex].image}
+                alt={uniforms[selectedIndex].title}
+                width={1200}
+                height={800}
+                className="w-full h-auto rounded-lg shadow-lg"
+                priority
+              />
+            </div>
+            {/* Logo inside modal */}
+            <div className="absolute top-2 right-2 bg-white/80 p-2 rounded-full shadow">
+              <img
+                src={logoUrl}
+                alt="Logo"
+                className="h-10 w-10 object-contain"
+              />
+            </div>
+
+            {/* Close Button (small & neat) */}
+            <button
+              className="absolute top-3 right-3 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition"
+              onClick={closeModal}
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {/* Navigation Arrows (small, circular) */}
+            <button
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition"
+              onClick={showPrev}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition"
+              onClick={showNext}
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 };
 
-export default SuitingSchoolUniformsPage;
+export default UniformSuitingPage;
