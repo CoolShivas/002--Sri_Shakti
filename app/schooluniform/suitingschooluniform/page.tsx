@@ -24,7 +24,7 @@ const cardVariants = {
   }),
 };
 
-const CBSESchoolUniformsPage = () => {
+const SuitingSchoolUniformsPage = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(
     (state) => state?.uniformData?.isLoading ?? false
@@ -40,7 +40,7 @@ const CBSESchoolUniformsPage = () => {
   );
 
   const uniforms = useSelector((state) =>
-    selectUniformsByTypeAndSubtype(state, "school", "cbse")
+    selectUniformsByTypeAndSubtype(state, "school", "suiting")
   );
 
   useEffect(() => {
@@ -133,7 +133,7 @@ const CBSESchoolUniformsPage = () => {
               transition={{ duration: 0.8 }}
               className="text-5xl font-extrabold"
             >
-              CBSE School Uniforms
+              Suiting School Uniforms
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -210,125 +210,4 @@ const CBSESchoolUniformsPage = () => {
   );
 };
 
-export default CBSESchoolUniformsPage;
-
-////////******************************************************************************************** *////////
-
-// // // Having Quick Links in sidebar of all Main Page.
-
-// "use client";
-
-// import { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { motion } from "framer-motion";
-// import {
-//   fetchUniformApiServer,
-//   selectUniformsByTypeAndSubtype,
-// } from "../../redux/slice";
-// import { Card, CardContent, CardHeader } from "@/components/ui/card";
-// import Image from "next/image";
-// import Link from "next/link";
-// import SidebarLinks from "@/components/SidebarLinks";
-// import ContactAdvertise from "@/components/ContactAdvertise";
-
-// const cardVariants = {
-//   hidden: { opacity: 0, y: 40 },
-//   visible: (i: number) => ({
-//     opacity: 1,
-//     y: 0,
-//     transition: { delay: i * 0.1, duration: 0.6, type: "spring" },
-//   }),
-// };
-
-// const CBSESchoolUniformsPage = () => {
-//   const dispatch = useDispatch();
-//   const isLoading = useSelector(
-//     (state) => state?.uniformData?.isLoading ?? false
-//   );
-//   const error = useSelector((state) => state?.uniformData?.error ?? null);
-//   const uniforms = useSelector((state) =>
-//     selectUniformsByTypeAndSubtype(state, "school", "cbse")
-//   );
-
-//   useEffect(() => {
-//     dispatch(fetchUniformApiServer());
-//   }, [dispatch]);
-
-//   return (
-//     <div className="min-h-screen bg-gray-50">
-//       <section className="py-10">
-//         <div className="container mx-auto px-4">
-//           <h1 className="text-2xl md:text-3xl font-bold mb-6">
-//             CBSE School Uniforms
-//           </h1>
-//           <div className="grid md:grid-cols-4 gap-6">
-//             <div className="md:col-span-1 bg-white p-6 shadow-lg rounded-lg">
-//               <SidebarLinks />
-//             </div>
-//             <div className="md:col-span-3">
-//               {isLoading && (
-//                 <div className="py-10 text-center text-lg">
-//                   Loading uniforms...
-//                 </div>
-//               )}
-//               {error && (
-//                 <div className="py-10 text-center text-red-500">{error}</div>
-//               )}
-//               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-//                 {uniforms.length > 0
-//                   ? uniforms.map((uniform, index) => (
-//                       <motion.div
-//                         key={uniform.id || index}
-//                         custom={index}
-//                         initial="hidden"
-//                         whileInView="visible"
-//                         variants={cardVariants}
-//                       >
-//                         <Link
-//                           href={`/schooluniform/cbseschooluniform/${
-//                             uniform.id || index
-//                           }`}
-//                         >
-//                           <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
-//                             <CardHeader>
-//                               <h3 className="text-xl font-semibold">
-//                                 {uniform.title}
-//                               </h3>
-//                             </CardHeader>
-//                             <CardContent>
-//                               <div className="relative h-60">
-//                                 <Image
-//                                   src={uniform.image}
-//                                   alt={uniform.title}
-//                                   fill
-//                                   className="object-cover rounded-lg"
-//                                   priority={index < 3}
-//                                 />
-//                               </div>
-//                               <p className="mt-4 text-gray-700 line-clamp-3">
-//                                 {uniform.description}
-//                               </p>
-//                               <p className="mt-2 text-blue-600 font-semibold">
-//                                 View details →
-//                               </p>
-//                             </CardContent>
-//                           </Card>
-//                         </Link>
-//                       </motion.div>
-//                     ))
-//                   : !isLoading && (
-//                       <p className="text-center text-gray-500">
-//                         No CBSE uniforms found.
-//                       </p>
-//                     )}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-//       <ContactAdvertise />
-//     </div>
-//   );
-// };
-
-// export default CBSESchoolUniformsPage;
+export default SuitingSchoolUniformsPage;
