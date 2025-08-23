@@ -17,12 +17,51 @@ const categorySubpages = {
     { label: "Suitings", href: "/schooluniform/suitingschooluniform" },
   ],
   womenuniform: [
-    { label: "Plain Sarees", href: "/womenuniform/plainuniformsarees" },
-    { label: "Set Sarees", href: "/womenuniform/setsarees" },
+    {
+      label: "Wedding Sarees",
+      href: "/womenuniform/weddinguniformsarees",
+    },
+    { label: "Uniform Chudithars", href: "/womenuniform/uniformchudithars" },
+    {
+      label: "Turkey Crape Sarees",
+      href: "/womenuniform/turkeycrapeuniformsarees",
+    },
+    {
+      label: "Teacher Sarees",
+      href: "/womenuniform/teachersuniformsarees",
+    },
     { label: "Staff Sarees", href: "/womenuniform/staffuniformsarees" },
-    { label: "Teachers Sarees", href: "/womenuniform/teachersuniformsarees" },
-    { label: "Chudithars", href: "/womenuniform/uniformchudithars" },
-    { label: "Wedding Sarees", href: "/womenuniform/weddinguniformsarees" },
+
+    {
+      label: "Silk Touch Sarees",
+      href: "/womenuniform/silktouchuniformsarees",
+    },
+    {
+      label: "Silk Crape Sarees",
+      href: "/womenuniform/silkcrapeuniformsarees",
+    },
+    {
+      label: "Silk Cotton Sarees",
+      href: "/womenuniform/silkcottonuniformsarees",
+    },
+    { label: "Set Sarees", href: "/womenuniform/setsarees" },
+    {
+      label: "Saree Chudithar Combo",
+      href: "/womenuniform/sareechuditharcombo",
+    },
+    { label: "Plain Sarees", href: "/womenuniform/plainuniformsarees" },
+    {
+      label: "Peach Crape Sarees",
+      href: "/womenuniform/peachcrapeuniformsarees",
+    },
+    {
+      label: "Malgudi Silk Sarees",
+      href: "/womenuniform/malgudisilkuniformsarees",
+    },
+    {
+      label: "Cotton Sarees",
+      href: "/womenuniform/cottonuniformsarees",
+    },
   ],
   menuniform: [
     { label: "Staff Wear", href: "/menuniform/mensstaffuniform" },
