@@ -14,12 +14,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-white text-gray-900">
-        <Header />
-        <Navbar />
-        <main className="min-h-screen">
-          <Providers>{children}</Providers>
-        </main>
-        <Footer />
+        <Providers>
+          <Header />
+          <Navbar />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
