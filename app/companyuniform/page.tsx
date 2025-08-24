@@ -1,345 +1,229 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
-import { useCallback, useEffect, useState, type FC } from "react";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
-import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
-import ContactAdvertise from "@/components/ContactAdvertise";
+import {
+  fetchUniformApiServer,
+  selectAllUniforms,
+  selectUniformsByTypeAndSubtype,
+} from "../redux/slice";
+import { fetchLogoHeroBgImageServer } from "../redux/thirdSlice";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import Image from "next/image";
 import Link from "next/link";
-
-interface CompanyCategory {
-  title: string;
-  description: string;
-  features: string[];
-  image: string;
-  code_ID: string;
-  logo: string;
-  subLink: string;
-}
+import ContactAdvertise from "@/components/ContactAdvertise";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: {
-      delay: i * 0.1,
-      duration: 0.6,
-      type: "spring",
-    },
+    transition: { delay: i * 0.1, duration: 0.6, type: "spring" },
   }),
 };
 
-const CompanyUniforms: FC = () => {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+const CompanyUniformPage = () => {
+  const dispatch = useDispatch();
 
-  const companyCategories: CompanyCategory[] = [
-    {
-      title: "Company Uniforms",
-      image: "/company_uniforms/Company_Uniforms.png",
-      description:
-        "Professional corporate uniforms designed to enhance brand identity and employee appearance.",
-      features: [
-        "Brand identity",
-        "Professional look",
-        "Custom designs",
-        "Quality fabrics",
-      ],
-      code_ID: "CU-001",
-      logo: "/images/SriSakthi.jpg",
-      subLink: "/companyuniform/companyuniform",
-    },
+  const isLoading = useSelector(
+    (state: any) => state?.uniformData?.isLoading ?? false
+  );
+  const error = useSelector((state: any) => state?.uniformData?.error ?? null);
 
-    {
-      title: "Staff Uniforms",
-      image: "/company_uniforms/Staff_Uniforms.png",
-      description:
-        "Versatile staff uniforms suitable for various industries and work environments.",
-      features: [
-        "Versatile designs",
-        "Multi-industry",
-        "Comfortable wear",
-        "Durable fabrics",
-      ],
-      code_ID: "CU-002",
-      logo: "/images/SriSakthi.jpg",
-      subLink: "/companyuniform/staffuniform",
-    },
-    {
-      title: "Industrial Uniforms",
-      image: "/company_uniforms/Industrial_Uniforms.png",
-      description:
-        "Safety-focused uniforms designed for industrial workers and manufacturing environments.",
-      features: [
-        "Safety focused",
-        "Durable materials",
-        "Work-friendly",
-        "Protection features",
-      ],
-      code_ID: "CU-003",
-      logo: "/images/SriSakthi.jpg",
-      subLink: "/companyuniform/industrialuniform",
-    },
-    {
-      title: "Mechanic Uniforms",
-      image: "/company_uniforms/Mechanic_Uniforms.png",
-      description:
-        "Specialized uniforms for mechanics and automotive industry professionals.",
-      features: [
-        "Oil resistant",
-        "Durable fabric",
-        "Practical design",
-        "Professional look",
-      ],
-      code_ID: "CU-004",
-      logo: "/images/SriSakthi.jpg",
-      subLink: "/companyuniform/mechanicuniform",
-    },
-  ];
+  const logoHeroStatus = useSelector(
+    (state: any) => state?.logoHeroImages?.status ?? "idle"
+  );
+  const logoHeroArr = useSelector((state: any) =>
+    Array.isArray(state?.logoHeroImages?.logoHeroArr)
+      ? state.logoHeroImages.logoHeroArr
+      : []
+  );
 
-  const handleNext = useCallback(() => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((prev) => (prev! + 1) % companyCategories.length);
-  }, [selectedIndex, companyCategories.length]);
+  const allUniforms = useSelector(selectAllUniforms);
 
-  const handlePrev = useCallback(() => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((prev) =>
-      prev! === 0 ? companyCategories.length - 1 : prev! - 1
+  // 🔹 Extract unique subtypes dynamically for "Company"
+  const uniqueSubtypes = useMemo(() => {
+    const companyUniforms = allUniforms.filter(
+      (u: any) => u.uniformType === "Company"
     );
-  }, [selectedIndex, companyCategories.length]);
+    const seen = new Set<string>();
+    return companyUniforms.filter((u: any) => {
+      if (seen.has(u.uniformSubtype)) return false;
+      seen.add(u.uniformSubtype);
+      return true;
+    });
+  }, [allUniforms]);
+
+  // 🔹 Prepare previews for each subtype
+  const previews = useMemo(
+    () =>
+      uniqueSubtypes
+        .map((item: any) => {
+          const uniformData = selectUniformsByTypeAndSubtype(
+            { uniformData: { uniformArr: allUniforms } },
+            "Company",
+            item.uniformSubtype
+          );
+          return {
+            label: item.uniformSubtype,
+            link: `/companyuniform/${item.uniformSubtype
+              .replace(/\s+/g, "")
+              .toLowerCase()}`,
+            data: uniformData[0],
+          };
+        })
+        .filter((p) => p.data),
+    [allUniforms, uniqueSubtypes]
+  );
 
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (selectedIndex === null) return;
-      if (e.key === "ArrowRight") handleNext();
-      if (e.key === "ArrowLeft") handlePrev();
-      if (e.key === "Escape") setSelectedIndex(null);
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [selectedIndex, handleNext, handlePrev]);
+    dispatch(fetchUniformApiServer() as any);
+    dispatch(fetchLogoHeroBgImageServer() as any);
+  }, [dispatch]);
+
+  const logoItem = logoHeroArr.find((item: any) => item?.type === "logo");
+
+  const heroImageUrl =
+    logoHeroArr.find(
+      (item: any) =>
+        item?.name === "company-hero-section" && item?.type === "background"
+    )?.url || "/placeholder-hero.jpg";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-rose-500 via-pink-500 to-indigo-500 text-white overflow-hidden">
-        <div className="container mx-auto px-4 text-center relative z-10">
+      <section
+        className="relative py-20 text-white"
+        style={{
+          backgroundImage: `url(${heroImageUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="container mx-auto text-center relative z-10">
+          {logoHeroStatus === "loading" ? (
+            <p className="text-center mb-4">Loading logo...</p>
+          ) : logoHeroStatus === "failed" ? (
+            <p className="text-center text-red-500 mb-4">Error loading logo</p>
+          ) : !logoItem ? (
+            <p className="text-center text-yellow-500 mb-4">Logo not found</p>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="mb-4"
+            >
+              <img
+                src={logoItem.url || "/placeholder-logo.png"}
+                alt="Sri Sakthi Uniforms Logo"
+                className="h-16 w-auto rounded-full shadow-md object-contain mx-auto"
+              />
+            </motion.div>
+          )}
           <motion.h1
             initial={{ opacity: 0, y: -40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg"
+            transition={{ duration: 0.8 }}
+            className="text-5xl font-extrabold"
           >
             Company Uniforms
           </motion.h1>
-
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-lg md:text-2xl mb-8 opacity-90 font-medium"
+            transition={{ delay: 0.3 }}
+            className="mt-4 text-lg"
           >
-            Staff, Industrial and Corporate Uniforms
+            Discover our wide collection of company uniforms tailored for
+            different industries.
           </motion.p>
-
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="max-w-5xl mx-auto"
-          >
-            <div className="relative w-full h-[50vh] md:h-[50vh] overflow-hidden rounded-3xl">
-              <Image
-                src="/images/hero-company-uniforms.jpg"
-                alt="Other Uniforms"
-                fill
-                sizes="(max-width: 768px) 100vw, 1200px"
-                className="object-cover"
-                priority
-              />
-            </div>
-          </motion.div>
         </div>
       </section>
 
-      {/* Product Cards */}
-      <section className="py-16 bg-gray-50">
+      {/* Subpage Cards */}
+      <section className="py-10">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            viewport={{ once: true }}
-          >
-            <motion.h2
-              className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-700 via-fuchsia-500 to-amber-500 bg-clip-text text-transparent drop-shadow-lg"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: [0.95, 1.02, 1] }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatType: "mirror",
-              }}
-            >
-              Company Uniform Categories
-            </motion.h2>
-
-            <motion.p
-              className="text-md md:text-lg text-gray-600 mt-4 font-medium max-w-2xl mx-auto leading-relaxed tracking-wide"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.6, 1] }}
-              transition={{
-                duration: 1.2,
-                delay: 0.3,
-                ease: "easeOut",
-              }}
-            >
-              <span className="font-bold">
-                Professional uniforms designed for various industries and
-                corporate environments
-              </span>
-            </motion.p>
-          </motion.div>
+          {isLoading && (
+            <div className="py-10 text-center text-lg">Loading uniforms...</div>
+          )}
+          {error && (
+            <div className="py-10 text-center text-red-500">{error}</div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {companyCategories.map((category, index) => {
-              return (
-                <motion.div
-                  key={index}
-                  custom={index}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={cardVariants}
-                >
-                  <Card className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2">
-                    <CardHeader>
-                      <div
-                        className="relative w-full h-64 flex items-center justify-center overflow-hidden"
-                        onClick={() => setSelectedIndex(index)}
-                      >
-                        <div className="relative w-full max-w-2xl max-h-[30vh] overflow-hidden cursor-pointer">
-                          <Image
-                            src={category.image}
-                            alt={category.title}
-                            width={1200}
-                            height={800}
-                            className="w-full h-auto rounded-lg shadow-lg"
-                            priority
-                          />
-                          <div className="absolute top-4 right-4 bg-white/70 rounded-full p-2 shadow-md">
+            {previews.length > 0
+              ? previews.map((preview, index) => (
+                  <motion.div
+                    key={preview.label}
+                    custom={index}
+                    initial="hidden"
+                    whileInView="visible"
+                    variants={cardVariants}
+                  >
+                    <Link href={preview.link}>
+                      <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
+                        <CardHeader>
+                          <h3 className="text-xl font-semibold capitalize">
+                            {preview.label}
+                          </h3>
+                        </CardHeader>
+                        <CardContent>
+                          {/* 🔹 Image container with overlays */}
+                          <div className="relative w-full h-72 bg-white">
                             <Image
-                              src={category.logo}
-                              alt="Logo"
-                              width={32}
-                              height={32}
-                              priority
+                              src={preview.data.image}
+                              alt={preview.data.title}
+                              fill
+                              className="object-contain p-2"
+                              priority={index < 3}
                             />
+
+                            {/* 🔹 Logo top-right INSIDE image */}
+                            {logoItem && (
+                              <div className="absolute top-2 right-20 z-10 bg-white/80 rounded-full p-1 shadow">
+                                <img
+                                  src={logoItem.url}
+                                  alt="Logo"
+                                  className="h-8 w-8 object-contain"
+                                />
+                              </div>
+                            )}
+
+                            {/* 🔹 Uniform Code bottom-right INSIDE image */}
+                            {preview.data.uniformCode && (
+                              <div className="absolute bottom-2 right-20 z-10 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                {preview.data.uniformCode}
+                              </div>
+                            )}
                           </div>
-                          <div className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
-                            {category.code_ID}
-                          </div>
-                        </div>
-                      </div>
-                      <Link href={category.subLink}>
-                        <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
-                          {category.title}
-                        </h3>
-                      </Link>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-700 mb-4 text-center text-md font-semibold">
-                        {category.description}
-                      </p>
-                      <ul className="space-y-2">
-                        {category.features.map((feature, featureIndex) => (
-                          <li
-                            key={featureIndex}
-                            className="flex items-center text-md text-gray-700 font-semibold"
-                          >
-                            <CheckCircle className="w-4 h-4 text-brand-blue mr-2" />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
+
+                          <p className="mt-4 text-gray-700 line-clamp-3">
+                            {preview.data.description}
+                          </p>
+                          <p className="mt-2 text-blue-600 font-semibold">
+                            View all {preview.label} →
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                ))
+              : !isLoading && (
+                  <p className="text-center text-gray-500">
+                    No company uniforms found.
+                  </p>
+                )}
           </div>
         </div>
       </section>
-      <ContactAdvertise></ContactAdvertise>
 
-      {/* Image Modal with Navigation */}
-      {selectedIndex !== null && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
-          {/* Navigation + Close Buttons */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePrev();
-            }}
-            className="absolute left-8 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg z-50"
-          >
-            <ChevronLeft className="w-6 h-6 text-black" />
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleNext();
-            }}
-            className="absolute right-8 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg z-50"
-          >
-            <ChevronRight className="w-6 h-6 text-black" />
-          </button>
-
-          <button
-            onClick={() => setSelectedIndex(null)}
-            className="absolute top-6 right-6 bg-white hover:bg-gray-100 rounded-full p-2 shadow-lg z-50"
-          >
-            <X className="w-6 h-6 text-black" />
-          </button>
-
-          {/* Image Container with Watermark */}
-          <div className="relative w-full max-w-2xl max-h-[70vh] overflow-hidden">
-            <Image
-              src={companyCategories[selectedIndex].image}
-              alt={companyCategories[selectedIndex].title}
-              width={1200}
-              height={800}
-              className="w-full h-auto rounded-lg shadow-lg"
-              priority
-            />
-
-            {/* Logo Watermark */}
-            <div className="absolute top-4 right-4 bg-white/70 rounded-full p-2 shadow-md">
-              <Image
-                // src="/images/SriSakthi.jpg"
-                src={companyCategories[selectedIndex].logo}
-                alt="Logo"
-                width={48}
-                height={48}
-                className="rounded-full"
-                priority
-              />
-            </div>
-
-            {/* Code_ID Watermark */}
-            <div className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
-              {companyCategories[selectedIndex].code_ID}
-            </div>
-          </div>
-        </div>
-      )}
+      <ContactAdvertise />
     </div>
   );
 };
 
-export default CompanyUniforms;
+export default CompanyUniformPage;

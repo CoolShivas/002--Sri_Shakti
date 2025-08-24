@@ -97,10 +97,10 @@ const categorySubpages = {
     },
   ],
   companyuniform: [
-    { label: "Company Wear", href: "/companyuniform/companyuniform" },
-    { label: "Industrial", href: "/companyuniform/industrialuniform" },
-    { label: "Mechanic", href: "/companyuniform/mechanicuniform" },
-    { label: "Staff Attire", href: "/companyuniform/staffuniform" },
+    { label: "Company Wear", href: "/companyuniform/companyuniforms" },
+    { label: "Industrial", href: "/companyuniform/industrialuniforms" },
+    { label: "Mechanic", href: "/companyuniform/mechanicuniforms" },
+    { label: "Staff Attire", href: "/companyuniform/staffuniforms" },
   ],
   otheruniform: [
     { label: "Aviation Crew", href: "/otheruniform/aviationcrewuniform" },
