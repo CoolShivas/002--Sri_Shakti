@@ -64,7 +64,6 @@ const categorySubpages = {
     },
   ],
   menuniform: [
-    { label: "Staff Wear", href: "/menuniform/mensstaffuniform" },
     { label: "Blazers", href: "/menuniform/uniformblazers" },
     { label: "Pants", href: "/menuniform/uniformpants" },
     { label: "Shirts", href: "/menuniform/uniformshirts" },
