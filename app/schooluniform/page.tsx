@@ -25,14 +25,16 @@ const cardVariants = {
 
 const SchoolUniformsPage = () => {
   const dispatch = useDispatch();
+
   const isLoading = useSelector(
-    (state) => state?.uniformData?.isLoading ?? false
+    (state: any) => state?.uniformData?.isLoading ?? false
   );
-  const error = useSelector((state) => state?.uniformData?.error ?? null);
+  const error = useSelector((state: any) => state?.uniformData?.error ?? null);
+
   const logoHeroStatus = useSelector(
-    (state) => state?.logoHeroImages?.status ?? "idle"
+    (state: any) => state?.logoHeroImages?.status ?? "idle"
   );
-  const logoHeroArr = useSelector((state) =>
+  const logoHeroArr = useSelector((state: any) =>
     Array.isArray(state?.logoHeroImages?.logoHeroArr)
       ? state.logoHeroImages.logoHeroArr
       : []
@@ -40,51 +42,56 @@ const SchoolUniformsPage = () => {
 
   const allUniforms = useSelector(selectAllUniforms);
 
-  const uniformTypes = useMemo(
-    () => [
-      { type: "school", subtype: "cbse" },
-      { type: "school", subtype: "private" },
-      { type: "school", subtype: "government" },
-      { type: "school", subtype: "shirting" },
-      { type: "school", subtype: "suiting" },
-      { type: "school", subtype: "plain" },
-    ],
-    []
-  );
+  // 🔹 Extract unique subtypes dynamically for "School"
+  const uniqueSubtypes = useMemo(() => {
+    const schoolUniforms = allUniforms.filter(
+      (u: any) => u.uniformType === "School"
+    );
+    const seen = new Set<string>();
+    return schoolUniforms.filter((u: any) => {
+      if (seen.has(u.uniformSubtype)) return false;
+      seen.add(u.uniformSubtype);
+      return true;
+    });
+  }, [allUniforms]);
 
+  // 🔹 Prepare previews for each unique subtype
   const previews = useMemo(
     () =>
-      uniformTypes
-        .map(({ subtype }, index) => {
+      uniqueSubtypes
+        .map((item: any) => {
           const uniformData = selectUniformsByTypeAndSubtype(
             { uniformData: { uniformArr: allUniforms } },
-            "school",
-            subtype
+            "School",
+            item.uniformSubtype
           );
           return {
-            label: subtype.charAt(0).toUpperCase() + subtype.slice(1),
-            link: `/schooluniform/${subtype}schooluniform`,
+            label: item.uniformSubtype,
+            link: `/schooluniform/${item.uniformSubtype
+              .replace(/\s+/g, "")
+              .toLowerCase()}`,
             data: uniformData[0],
           };
         })
         .filter((p) => p.data),
-    [allUniforms, uniformTypes]
+    [allUniforms, uniqueSubtypes]
   );
 
   useEffect(() => {
-    dispatch(fetchUniformApiServer());
-    dispatch(fetchLogoHeroBgImageServer());
+    dispatch(fetchUniformApiServer() as any);
+    dispatch(fetchLogoHeroBgImageServer() as any);
   }, [dispatch]);
 
-  const logoItem = logoHeroArr.find((item) => item?.type === "logo");
+  const logoItem = logoHeroArr.find((item: any) => item?.type === "logo");
   const heroImageUrl =
     logoHeroArr.find(
-      (item) =>
+      (item: any) =>
         item?.name === "school-hero-section" && item?.type === "background"
     )?.url || "/placeholder-hero.jpg";
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
       <section
         className="relative py-20 text-white"
         style={{
@@ -99,9 +106,7 @@ const SchoolUniformsPage = () => {
           {logoHeroStatus === "loading" ? (
             <p className="text-center mb-4">Loading logo...</p>
           ) : logoHeroStatus === "failed" ? (
-            <p className="text-center text-red-500 mb-4">
-              Error loading logo: {logoHeroStatus.error}
-            </p>
+            <p className="text-center text-red-500 mb-4">Error loading logo</p>
           ) : !logoItem ? (
             <p className="text-center text-yellow-500 mb-4">Logo not found</p>
           ) : (
@@ -137,6 +142,7 @@ const SchoolUniformsPage = () => {
         </div>
       </section>
 
+      {/* Cards Section */}
       <section className="py-10">
         <div className="container mx-auto px-4">
           {isLoading && (
@@ -145,6 +151,7 @@ const SchoolUniformsPage = () => {
           {error && (
             <div className="py-10 text-center text-red-500">{error}</div>
           )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {previews.length > 0
               ? previews.map((preview, index) => (

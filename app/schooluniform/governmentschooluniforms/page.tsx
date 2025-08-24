@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -23,48 +23,49 @@ const cardVariants = {
   }),
 };
 
-const PrivateSchoolUniformsPage = () => {
+const GovernmentSchoolUniformPage = () => {
   const dispatch = useDispatch();
+
   const isLoading = useSelector(
-    (state) => state?.uniformData?.isLoading ?? false
+    (state: any) => state?.uniformData?.isLoading ?? false
   );
-  const error = useSelector((state) => state?.uniformData?.error ?? null);
+  const error = useSelector((state: any) => state?.uniformData?.error ?? null);
 
-  const logoHeroArr = useSelector((state) =>
-    Array.isArray(state?.logoHeroImages?.logoHeroArr)
-      ? state.logoHeroImages.logoHeroArr
-      : []
+  // ✅ CBS School Uniforms filter
+  const uniforms = useSelector((state: any) =>
+    selectUniformsByTypeAndSubtype(
+      state,
+      "School",
+      "Government School Uniforms"
+    )
   );
 
-  const uniforms = useSelector((state) =>
-    selectUniformsByTypeAndSubtype(state, "school", "private")
-  );
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     dispatch(fetchUniformApiServer());
     dispatch(fetchLogoHeroBgImageServer());
   }, [dispatch]);
 
-  const logoItem = logoHeroArr.find((item) => item?.type === "logo");
-  const logoUrl = logoItem?.url || "/placeholder-logo.png";
+  // Keyboard navigation for modal
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (selectedIndex === null) return;
 
-  // Modal state
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (selectedIndex === null) return;
-    if (e.key === "ArrowRight") {
-      setSelectedIndex((prev) =>
-        prev !== null ? (prev + 1) % uniforms.length : null
-      );
-    } else if (e.key === "ArrowLeft") {
-      setSelectedIndex((prev) =>
-        prev !== null ? (prev - 1 + uniforms.length) % uniforms.length : null
-      );
-    } else if (e.key === "Escape") {
-      setSelectedIndex(null);
-    }
-  };
+      if (e.key === "ArrowRight") {
+        setSelectedIndex((prev) =>
+          prev === null ? null : (prev + 1) % uniforms.length
+        );
+      } else if (e.key === "ArrowLeft") {
+        setSelectedIndex((prev) =>
+          prev === null ? null : (prev - 1 + uniforms.length) % uniforms.length
+        );
+      } else if (e.key === "Escape") {
+        setSelectedIndex(null);
+      }
+    },
+    [selectedIndex, uniforms.length]
+  );
 
   useEffect(() => {
     if (selectedIndex !== null) {
@@ -73,7 +74,7 @@ const PrivateSchoolUniformsPage = () => {
       window.removeEventListener("keydown", handleKeyDown);
     }
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedIndex, uniforms.length]);
+  }, [selectedIndex, handleKeyDown]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -90,7 +91,7 @@ const PrivateSchoolUniformsPage = () => {
             <div className="md:col-span-3">
               {isLoading && (
                 <div className="py-10 text-center text-lg">
-                  Loading uniforms...
+                  Loading government school uniforms...
                 </div>
               )}
               {error && (
@@ -98,10 +99,10 @@ const PrivateSchoolUniformsPage = () => {
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {uniforms.length > 0
-                  ? uniforms.map((uniform, index) => (
+                {uniforms && uniforms.length > 0
+                  ? uniforms.map((uniform: any, index: number) => (
                       <motion.div
-                        key={uniform.id || index}
+                        key={uniform._id || index}
                         custom={index}
                         initial="hidden"
                         whileInView="visible"
@@ -117,23 +118,34 @@ const PrivateSchoolUniformsPage = () => {
                             </h3>
                           </CardHeader>
                           <CardContent>
-                            <div className="relative h-60">
+                            <div className="relative h-60 bg-gray-100 flex items-center justify-center">
+                              {/* Uniform Image */}
                               <Image
                                 src={uniform.image}
                                 alt={uniform.title}
                                 fill
-                                className="object-cover rounded-lg"
+                                className="object-contain p-2"
                                 priority={index < 3}
                               />
-                              {/* Overlay Logo */}
-                              {logoUrl && (
-                                <div className="absolute bottom-2 right-2 bg-white/80 p-1 rounded-full shadow-md">
-                                  <img
-                                    src={logoUrl}
-                                    alt="Logo"
-                                    className="h-10 w-10 object-contain"
+
+                              {/* Logo top-right */}
+                              {uniform.logo && (
+                                <div className="absolute top-2 right-2 bg-white/80 rounded p-1">
+                                  <Image
+                                    src={uniform.logo}
+                                    alt="logo"
+                                    width={40}
+                                    height={40}
+                                    className="object-contain"
                                   />
                                 </div>
+                              )}
+
+                              {/* Uniform Code bottom-right */}
+                              {uniform.uniformCode && (
+                                <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                                  {uniform.uniformCode}
+                                </span>
                               )}
                             </div>
                             <p className="mt-4 text-gray-700 line-clamp-3">
@@ -145,7 +157,7 @@ const PrivateSchoolUniformsPage = () => {
                     ))
                   : !isLoading && (
                       <p className="text-center text-gray-500">
-                        No Private School uniforms found.
+                        No Government School Uniforms found.
                       </p>
                     )}
               </div>
@@ -154,60 +166,80 @@ const PrivateSchoolUniformsPage = () => {
         </div>
       </section>
 
-      <ContactAdvertise />
-
-      {/* Image Modal */}
+      {/* Modal Overlay */}
       <AnimatePresence>
         {selectedIndex !== null && uniforms[selectedIndex] && (
           <motion.div
-            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedIndex(null)}
           >
             <motion.div
-              className="relative max-w-4xl w-full mx-4"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="relative max-w-4xl w-full px-6"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
-                src={uniforms[selectedIndex].image}
-                alt={uniforms[selectedIndex].title}
-                width={1200}
-                height={800}
-                className="w-full h-auto rounded-lg object-contain"
-              />
+              {/* Full Image */}
+              <div className="relative w-full h-[80vh] bg-white flex items-center justify-center rounded-lg overflow-hidden">
+                <Image
+                  src={uniforms[selectedIndex].image}
+                  alt={uniforms[selectedIndex].title}
+                  fill
+                  className="object-contain"
+                />
+
+                {/* Logo top-right */}
+                {uniforms[selectedIndex].logo && (
+                  <div className="absolute top-4 right-4 bg-white/80 rounded p-2">
+                    <Image
+                      src={uniforms[selectedIndex].logo}
+                      alt="logo"
+                      width={50}
+                      height={50}
+                      className="object-contain"
+                    />
+                  </div>
+                )}
+
+                {/* Uniform Code bottom-right */}
+                {uniforms[selectedIndex].uniformCode && (
+                  <span className="absolute bottom-4 right-4 bg-black/60 text-white text-sm px-3 py-1 rounded">
+                    {uniforms[selectedIndex].uniformCode}
+                  </span>
+                )}
+              </div>
 
               {/* Close Button */}
               <button
+                className="absolute top-4 right-4 bg-black/60 p-2 rounded-full text-white"
                 onClick={() => setSelectedIndex(null)}
-                className="absolute top-3 right-3 text-white bg-black/60 p-2 rounded-full hover:bg-black/80"
               >
                 <X size={24} />
               </button>
 
               {/* Left Arrow */}
               <button
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 p-2 rounded-full text-white"
                 onClick={() =>
                   setSelectedIndex(
                     (selectedIndex - 1 + uniforms.length) % uniforms.length
                   )
                 }
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-white bg-black/60 p-2 rounded-full hover:bg-black/80"
               >
                 <ChevronLeft size={28} />
               </button>
 
               {/* Right Arrow */}
               <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 p-2 rounded-full text-white"
                 onClick={() =>
                   setSelectedIndex((selectedIndex + 1) % uniforms.length)
                 }
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white bg-black/60 p-2 rounded-full hover:bg-black/80"
               >
                 <ChevronRight size={28} />
               </button>
@@ -215,8 +247,10 @@ const PrivateSchoolUniformsPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ContactAdvertise />
     </div>
   );
 };
 
-export default PrivateSchoolUniformsPage;
+export default GovernmentSchoolUniformPage;

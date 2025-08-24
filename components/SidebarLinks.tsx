@@ -6,15 +6,15 @@ import { useState } from "react";
 
 const categorySubpages = {
   schooluniform: [
-    { label: "CBSE School", href: "/schooluniform/cbseschooluniform" },
-    { label: "Private School", href: "/schooluniform/privateschooluniform" },
-    { label: "Plain School", href: "/schooluniform/plainschooluniform" },
+    { label: "CBSE School", href: "/schooluniform/cbseschooluniforms" },
+    { label: "Private School", href: "/schooluniform/privateschooluniforms" },
+    { label: "Plain School", href: "/schooluniform/plainschooluniforms" },
     {
       label: "Government School",
-      href: "/schooluniform/governmentschooluniform",
+      href: "/schooluniform/governmentschooluniforms",
     },
-    { label: "Shirtings", href: "/schooluniform/shirtingschooluniform" },
-    { label: "Suitings", href: "/schooluniform/suitingschooluniform" },
+    { label: "Shirtings", href: "/schooluniform/uniformshirtings" },
+    { label: "Suitings", href: "/schooluniform/uniformsuitings" },
   ],
   womenuniform: [
     {
