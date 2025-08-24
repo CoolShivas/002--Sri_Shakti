@@ -1,319 +1,293 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
+import { fetchUniformApiServer, selectUniformsByType } from "../redux/slice";
+import { fetchLogoHeroBgImageServer } from "../redux/thirdSlice";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
-import type { FC } from "react";
-import { motion } from "framer-motion";
-import { CheckCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ContactAdvertise from "@/components/ContactAdvertise";
-import Link from "next/link";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
-interface OtherCategory {
-  title: string;
-  description: string;
-  features: string[];
-  image: string;
-  code_ID: string;
-  logo: string;
-  subLink: string;
-}
-
+// ✅ Animation for cards
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: {
-      delay: i * 0.1,
-      duration: 0.6,
-      type: "spring",
-    },
+    transition: { delay: i * 0.1, duration: 0.6, type: "spring" },
   }),
 };
 
-const OtherUniforms: FC = () => {
+const OtherUniformPage = () => {
+  const dispatch = useDispatch();
+
+  const isLoading = useSelector(
+    (state: any) => state?.uniformData?.isLoading ?? false
+  );
+  const error = useSelector((state: any) => state?.uniformData?.error ?? null);
+
+  // ✅ Select only "Other Uniform"
+  const uniforms = useSelector((state: any) =>
+    selectUniformsByType(state, "Other")
+  );
+
+  const logoHeroStatus = useSelector(
+    (state: any) => state?.logoHeroImages?.status ?? "idle"
+  );
+  const logoHeroArr = useSelector((state: any) =>
+    Array.isArray(state?.logoHeroImages?.logoHeroArr)
+      ? state.logoHeroImages.logoHeroArr
+      : []
+  );
+
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const otherCategories: OtherCategory[] = [
-    {
-      title: "Aviation Crew Uniforms",
-      image: "/other_uniforms/Aviation_Crew_Uniforms.jpg",
-      description:
-        "Elegant and functional uniforms for airline crew members, combining comfort, style, and brand identity.",
-      features: [
-        "Breathable and wrinkle-resistant fabric",
-        "Tailored fit for professional appearance",
-        "Customizable with airline branding",
-      ],
-      code_ID: "OU-001",
-      logo: "/images/SriSakthi.jpg",
-      subLink: "/otheruniform/aviationcrewuniform",
-    },
-    {
-      title: "Security Guard Uniforms",
-      image: "/other_uniforms/Security_Guard_Uniforms.jfif",
-      description:
-        "Professional and durable uniforms for security personnel to ensure authority, comfort, and easy identification.",
-      features: [
-        "High-visibility options available",
-        "Weather-resistant fabric",
-        "Multiple storage pockets",
-      ],
-      code_ID: "OU-002",
-      logo: "/images/SriSakthi.jpg",
-      subLink: "/otheruniform/securityguarduniform",
-    },
-    {
-      title: "Sports Team Uniforms",
-      image: "/other_uniforms/Sports_Team_Uniforms.webp",
-      description:
-        "Custom sports uniforms designed for comfort, flexibility, and team spirit in various athletic activities.",
-      features: [
-        "Lightweight and breathable material",
-        "Moisture-wicking technology",
-        "Custom team colors and logos",
-      ],
-      code_ID: "OU-003",
-      logo: "/images/SriSakthi.jpg",
-      subLink: "/otheruniform/sportsteamuniform",
-    },
-  ];
+  useEffect(() => {
+    dispatch(fetchUniformApiServer());
+    dispatch(fetchLogoHeroBgImageServer());
+  }, [dispatch]);
 
-  const handleNext = useCallback(() => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((prev) => (prev! + 1) % otherCategories.length);
-  }, [selectedIndex, otherCategories.length]);
-
-  const handlePrev = useCallback(() => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((prev) =>
-      prev! === 0 ? otherCategories.length - 1 : prev! - 1
-    );
-  }, [selectedIndex, otherCategories.length]);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (selectedIndex === null) return;
+      if (e.key === "ArrowRight") {
+        setSelectedIndex((prev) =>
+          prev === null ? null : (prev + 1) % uniforms.length
+        );
+      } else if (e.key === "ArrowLeft") {
+        setSelectedIndex((prev) =>
+          prev === null ? null : (prev - 1 + uniforms.length) % uniforms.length
+        );
+      } else if (e.key === "Escape") {
+        setSelectedIndex(null);
+      }
+    },
+    [selectedIndex, uniforms.length]
+  );
 
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (selectedIndex === null) return;
-      if (e.key === "ArrowRight") handleNext();
-      if (e.key === "ArrowLeft") handlePrev();
-      if (e.key === "Escape") setSelectedIndex(null);
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [selectedIndex, handleNext, handlePrev]);
+    if (selectedIndex !== null)
+      window.addEventListener("keydown", handleKeyDown);
+    else window.removeEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex, handleKeyDown]);
+
+  const logoItem = logoHeroArr.find((item: any) => item?.type === "logo");
+  const heroImageUrl =
+    logoHeroArr.find(
+      (item: any) =>
+        item?.name === "other-hero-section" && item?.type === "background"
+    )?.url || "/placeholder-hero.jpg";
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-rose-500 via-pink-500 to-indigo-500 text-white overflow-hidden">
-        <div className="container mx-auto px-4 text-center relative z-10">
+    <div className="min-h-screen bg-gray-50">
+      {/* ✅ Hero Section */}
+      <section
+        className="relative w-full min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[75vh] flex items-center justify-center text-white"
+        style={{
+          backgroundImage: `url(${heroImageUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="container mx-auto text-center relative z-10 px-4">
+          {logoItem && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="mb-4"
+            >
+              <img
+                src={logoItem.url || "/placeholder-logo.png"}
+                alt="Sri Sakthi Uniforms Logo"
+                className="h-16 w-auto rounded-full shadow-md object-contain mx-auto"
+              />
+            </motion.div>
+          )}
           <motion.h1
             initial={{ opacity: 0, y: -40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg"
+            className="text-4xl sm:text-5xl font-extrabold"
           >
             Other Uniforms
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-lg md:text-2xl mb-8 opacity-90 font-medium"
+            transition={{ delay: 0.3 }}
+            className="mt-4 text-base sm:text-lg"
           >
-            Aviation Crew, Security-Guard, Sports Team Uniforms
+            Browse our other uniform categories.
           </motion.p>
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="max-w-5xl mx-auto"
-          >
-            <div className="relative w-full h-[50vh] md:h-[50vh] overflow-hidden rounded-3xl">
-              <Image
-                src="/images/hero-other-uniforms.jpg"
-                alt="Other Uniforms"
-                fill
-                sizes="(max-width: 768px) 100vw, 1200px"
-                className="object-cover"
-                priority
-              />
-            </div>
-          </motion.div>
         </div>
       </section>
 
-      {/* Product Cards */}
-      <section className="py-16 bg-gray-50">
+      {/* ✅ Uniform Cards */}
+      <section className="py-16">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <motion.h2
-              className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-700 via-fuchsia-500 to-amber-500 bg-clip-text text-transparent"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: [0.95, 1.02, 1] }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatType: "mirror",
-              }}
-            >
-              Other Uniform Categories
-            </motion.h2>
-            <motion.p
-              className="text-md md:text-lg text-gray-600 mt-4 font-medium max-w-2xl mx-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.6, 1] }}
-              transition={{ duration: 1.2, delay: 0.3 }}
-            >
-              <span className="font-bold">
-                Professional uniforms crafted for diverse teams, crews, and
-                corporate environments.
-              </span>
-            </motion.p>
-          </motion.div>
+          {isLoading && (
+            <div className="py-10 text-center text-lg">Loading uniforms...</div>
+          )}
+          {error && (
+            <div className="py-10 text-center text-red-500">{error}</div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {otherCategories.map((category, index) => (
-              <motion.div
-                key={index}
-                custom={index}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={cardVariants}
-              >
-                <Card className="bg-gradient-to-br from-white to-blue-50 border border-gray-200 transition-all duration-300 rounded-xl group p-2 hover:shadow-2xl">
-                  <CardHeader>
-                    <div
-                      className="relative w-full h-64 flex items-center justify-center overflow-hidden"
+            {uniforms && uniforms.length > 0
+              ? uniforms.map((uniform: any, index: number) => (
+                  <motion.div
+                    key={uniform._id || index}
+                    custom={index}
+                    initial="hidden"
+                    whileInView="visible"
+                    variants={cardVariants}
+                  >
+                    <Card
+                      className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
                       onClick={() => setSelectedIndex(index)}
                     >
-                      <div className="relative w-full max-w-2xl max-h-[30vh] overflow-hidden cursor-pointer">
-                        <Image
-                          src={category.image}
-                          alt={category.title}
-                          width={1200}
-                          height={800}
-                          className="w-full h-auto rounded-lg shadow-lg"
-                          priority
-                        />
-                        <div className="absolute top-4 right-4 bg-white/70 rounded-full p-2 shadow-md">
+                      <CardHeader>
+                        <h3 className="text-xl font-semibold">
+                          {uniform.title}
+                        </h3>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="relative aspect-[4/3] w-full">
+                          {/* ✅ Uniform Image fixed aspect ratio */}
                           <Image
-                            src={category.logo}
-                            alt="Logo"
-                            width={32}
-                            height={32}
-                            priority
+                            src={uniform.image}
+                            alt={uniform.title}
+                            fill
+                            className="object-cover rounded-lg"
+                            sizes="(max-width: 768px) 100vw,
+                                   (max-width: 1200px) 50vw,
+                                   33vw"
+                            priority={index < 3}
                           />
+
+                          {/* ✅ Overlay Logo (top-right corner) */}
+                          {logoItem && (
+                            <div className="absolute top-2 right-2 bg-white/80 p-1 rounded-full shadow-md">
+                              <Image
+                                src={logoItem.url}
+                                alt="Logo"
+                                width={40}
+                                height={40}
+                                className="object-contain rounded-full"
+                              />
+                            </div>
+                          )}
+
+                          {/* ✅ Uniform Code (bottom-right corner) */}
+                          {uniform.uniformCode && (
+                            <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                              {uniform.uniformCode}
+                            </div>
+                          )}
                         </div>
-                        <div className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
-                          {category.code_ID}
-                        </div>
-                      </div>
-                    </div>
-                    <Link href={category.subLink}>
-                      <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue mb-2 text-center p-2 hover:text-red-500 cursor-pointer">
-                        {category.title}
-                      </h3>
-                    </Link>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-700 mb-4 text-center text-md font-semibold">
-                      {category.description}
-                    </p>
-                    <ul className="space-y-2">
-                      {category.features.map((feature, featureIndex) => (
-                        <li
-                          key={featureIndex}
-                          className="flex items-center text-md text-gray-700 font-semibold"
-                        >
-                          <CheckCircle className="w-4 h-4 text-brand-blue mr-2" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+
+                        <p className="mt-4 text-gray-700 line-clamp-3">
+                          {uniform.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))
+              : !isLoading && (
+                  <p className="text-center text-gray-500">
+                    No Other Uniforms found.
+                  </p>
+                )}
           </div>
         </div>
       </section>
 
-      <ContactAdvertise />
-
-      {/* Image Modal with Navigation */}
-      {selectedIndex !== null && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
-          {/* Navigation + Close Buttons */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePrev();
-            }}
-            className="absolute left-8 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg z-50"
-          >
-            <ChevronLeft className="w-6 h-6 text-black" />
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleNext();
-            }}
-            className="absolute right-8 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg z-50"
-          >
-            <ChevronRight className="w-6 h-6 text-black" />
-          </button>
-
-          <button
+      {/* ✅ Modal */}
+      <AnimatePresence>
+        {selectedIndex !== null && uniforms[selectedIndex] && (
+          <motion.div
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={() => setSelectedIndex(null)}
-            className="absolute top-6 right-6 bg-white hover:bg-gray-100 rounded-full p-2 shadow-lg z-50"
           >
-            <X className="w-6 h-6 text-black" />
-          </button>
+            <motion.div
+              className="relative max-w-4xl w-full px-6"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative">
+                <Image
+                  src={uniforms[selectedIndex].image}
+                  alt={uniforms[selectedIndex].title}
+                  width={1000}
+                  height={700}
+                  className="rounded-lg object-contain mx-auto"
+                />
 
-          {/* Image Container with Watermark */}
-          <div className="relative w-full max-w-2xl max-h-[70vh] overflow-hidden">
-            <Image
-              src={otherCategories[selectedIndex].image}
-              alt={otherCategories[selectedIndex].title}
-              width={1200}
-              height={800}
-              className="w-full h-auto rounded-lg shadow-lg"
-              priority
-            />
+                {/* ✅ Overlay Logo in Modal */}
+                {logoItem && (
+                  <div className="absolute top-4 right-4 bg-white/80 p-2 rounded-full shadow-md">
+                    <Image
+                      src={logoItem.url}
+                      alt="Logo"
+                      width={50}
+                      height={50}
+                      className="object-contain rounded-full"
+                    />
+                  </div>
+                )}
 
-            {/* Logo Watermark */}
-            <div className="absolute top-4 right-4 bg-white/70 rounded-full p-2 shadow-md">
-              <Image
-                // src="/images/SriSakthi.jpg"
-                src={otherCategories[selectedIndex].logo}
-                alt="Logo"
-                width={48}
-                height={48}
-                className="rounded-full"
-                priority
-              />
-            </div>
+                {/* ✅ Uniform Code in Modal */}
+                {uniforms[selectedIndex].uniformCode && (
+                  <div className="absolute bottom-4 right-4 bg-black/70 text-white text-sm px-3 py-1 rounded">
+                    {uniforms[selectedIndex].uniformCode}
+                  </div>
+                )}
+              </div>
 
-            {/* Code_ID Watermark */}
-            <div className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
-              {otherCategories[selectedIndex].code_ID}
-            </div>
-          </div>
-        </div>
-      )}
+              <button
+                className="absolute top-4 left-4 bg-black/60 p-2 rounded-full text-white"
+                onClick={() => setSelectedIndex(null)}
+              >
+                <X size={24} />
+              </button>
+              <button
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 p-2 rounded-full text-white"
+                onClick={() =>
+                  setSelectedIndex(
+                    (selectedIndex - 1 + uniforms.length) % uniforms.length
+                  )
+                }
+              >
+                <ChevronLeft size={28} />
+              </button>
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 p-2 rounded-full text-white"
+                onClick={() =>
+                  setSelectedIndex((selectedIndex + 1) % uniforms.length)
+                }
+              >
+                <ChevronRight size={28} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <ContactAdvertise />
     </div>
   );
 };
 
-export default OtherUniforms;
+export default OtherUniformPage;
