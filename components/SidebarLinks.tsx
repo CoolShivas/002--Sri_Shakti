@@ -79,7 +79,7 @@ const categorySubpages = {
     { label: "Wait Staff", href: "/hoteluniform/waitstaffserviceuniform" },
   ],
   hospitaluniform: [
-    { label: "Doctor Coat", href: "/hospitaluniform/doctorcoat" },
+    { label: "Doctor Coat", href: "/hospitaluniform/doctorcoats" },
     { label: "Doctor Saree", href: "/hospitaluniform/doctoruniformsaree" },
     { label: "Hospital Wear", href: "/hospitaluniform/hospitaluniform" },
     { label: "Hospital Pants", href: "/hospitaluniform/hospitaluniformpant" },

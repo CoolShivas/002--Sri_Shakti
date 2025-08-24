@@ -23,7 +23,7 @@ const cardVariants = {
   }),
 };
 
-const HospitalUniformSareePage = () => {
+const DoctorCoatsPage = () => {
   const dispatch = useDispatch();
 
   const isLoading = useSelector(
@@ -31,9 +31,9 @@ const HospitalUniformSareePage = () => {
   );
   const error = useSelector((state: any) => state?.uniformData?.error ?? null);
 
-  // ✅ Doctor Uniform Saree: strict filter by uniformType + uniformSubtype
+  // ✅ Doctor Coats: strict filter by uniformType + uniformSubtype
   const uniforms = useSelector((state: any) =>
-    selectUniformsByTypeAndSubtype(state, "Hospital", "Hospital Uniform Sarees")
+    selectUniformsByTypeAndSubtype(state, "Hospital", "Doctor Coats")
   );
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -87,7 +87,7 @@ const HospitalUniformSareePage = () => {
             <div className="md:col-span-3">
               {isLoading && (
                 <div className="py-10 text-center text-lg">
-                  Loading hospital uniform saree...
+                  Loading doctor coats...
                 </div>
               )}
               {error && (
@@ -153,7 +153,7 @@ const HospitalUniformSareePage = () => {
                     ))
                   : !isLoading && (
                       <p className="text-center text-gray-500">
-                        No Doctor Uniform Sarees found.
+                        No Doctor Coats found.
                       </p>
                     )}
               </div>
@@ -249,4 +249,4 @@ const HospitalUniformSareePage = () => {
   );
 };
 
-export default HospitalUniformSareePage;
+export default DoctorCoatsPage;
