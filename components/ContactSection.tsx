@@ -7,9 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Phone, Mail, Building, CreditCard, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Define interface for API response (adjust based on actual structure)
 interface ContactDetail {
-  officeType: string; // e.g., 'Main Office', 'Branch Office'
+  officeType: string;
   address?: string;
   phone?: string[];
   email?: string;
@@ -22,10 +21,9 @@ interface ContactDetail {
   };
 }
 
-// Define state shape for TypeScript
 interface RootState {
   contactDetails: {
-    detailArr: ContactDetail[];
+    detailArr: any; // can be array OR object
     status: "idle" | "loading" | "succeeded" | "failed";
     error: string | null;
   };
@@ -65,9 +63,7 @@ const ContactSection = () => {
     "Mumbai",
   ];
 
-  const MotionCard = motion.create(Card);
-
-  // Fallback static data if API fails or is empty
+  // fallback
   const fallbackData: ContactDetail[] = [
     {
       officeType: "Main Office",
@@ -92,78 +88,61 @@ const ContactSection = () => {
     },
   ];
 
-  // Use API data if available, else fallback
+  // ✅ Normalize API response into array format
+  const normalizedData: ContactDetail[] = detailArr
+    ? Array.isArray(detailArr)
+      ? detailArr
+      : [
+          {
+            officeType: "Main Office",
+            address: detailArr.mainOffice,
+            phone: [detailArr.contactNo1, detailArr.contactNo2].filter(Boolean),
+            email: detailArr.email,
+          },
+          {
+            officeType: "Branch Office",
+            address: detailArr.branchOffice,
+          },
+          {
+            officeType: "Business Details",
+            gst: detailArr.GSTNO,
+            bankDetails: {
+              accountName: detailArr.accountName,
+              accountNo: detailArr.accountNumber,
+              ifsc: detailArr.IFSCcode,
+              branch: detailArr.branch,
+            },
+          },
+        ]
+    : [];
+
   const dataToDisplay =
-    status === "succeeded" && detailArr.length > 0 ? detailArr : fallbackData;
+    status === "succeeded" && normalizedData.length > 0
+      ? normalizedData
+      : fallbackData;
 
-  const renderCardContent = (item: ContactDetail, modal = false) => (
-    <>
-      {item.address && (
-        <div className="flex items-start gap-2">
-          <MapPin className={`w-4 h-4 mt-1 text-brand-blue`} />
-          <div>
-            <p className="font-semibold text-xl mb-2">Sri Sakthi Uniforms</p>
-            <p className="text-gray-600">{item.address}</p>
-          </div>
-        </div>
-      )}
-
-      {item.phone && item.phone.length > 0 && (
-        <div className="flex items-center gap-2">
-          <Phone className="w-4 h-4 text-brand-blue" />
-          <div className="space-x-2">
-            {item.phone.map((phone, i) => (
-              <span key={i}>
-                <a
-                  href={`tel:${phone}`}
-                  className="text-brand-red hover:underline"
-                >
-                  {phone}
-                </a>
-                {i < item.phone.length - 1 && (
-                  <span className="text-gray-400"> | </span>
-                )}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {item.email && (
-        <div className="flex items-center gap-2">
-          <Mail className="w-4 h-4 text-brand-blue" />
-          <a
-            href={`mailto:${item.email}`}
-            className="text-brand-red hover:underline"
-          >
-            {item.email}
-          </a>
-        </div>
-      )}
-
+  const renderCardContent = (item: ContactDetail) => (
+    <div className="space-y-3">
+      {item.address && <p className="text-gray-700">{item.address}</p>}
+      {item.phone &&
+        item.phone.map((phone, i) => (
+          <p key={i} className="text-brand-red">
+            {phone}
+          </p>
+        ))}
+      {item.email && <p className="text-blue-600">{item.email}</p>}
       {item.gst && (
-        <div>
-          <p className="font-semibold text-gray-800">GST No:</p>
-          <p className="text-gray-600">{item.gst}</p>
-        </div>
+        <p className="text-gray-700 font-semibold">GST No: {item.gst}</p>
       )}
-
       {item.bankDetails && (
-        <div>
-          <p className="font-semibold text-gray-800">Bank Details:</p>
-          <div
-            className={`${
-              modal ? "text-base" : "text-sm"
-            } text-gray-600 space-y-1`}
-          >
-            <p>Account Name: {item.bankDetails.accountName}</p>
-            <p>Account No: {item.bankDetails.accountNo}</p>
-            <p>IFSC code: {item.bankDetails.ifsc}</p>
-            <p>Branch: {item.bankDetails.branch}</p>
-          </div>
+        <div className="text-gray-700 space-y-1">
+          <p>Account Name: {item.bankDetails.accountName}</p>
+          <p>Account No: {item.bankDetails.accountNo}</p>
+          <p>IFSC: {item.bankDetails.ifsc}</p>
+          <p>Branch: {item.bankDetails.branch}</p>
         </div>
       )}
-    </>
+    </div>
   );
 
   return (
@@ -171,7 +150,7 @@ const ContactSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-14">
           <motion.h2
-            className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-700 via-fuchsia-500 to-amber-500 text-green-900 bg-clip-text text-transparent drop-shadow-lg hover:text-slate-500 cursor-pointer"
+            className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-700 via-fuchsia-500 to-amber-500 bg-clip-text text-transparent drop-shadow-lg"
             initial={{ scale: 0.95 }}
             animate={{ scale: [0.95, 1.02, 1] }}
             transition={{
@@ -183,127 +162,85 @@ const ContactSection = () => {
           >
             Contact Information
           </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            viewport={{ once: true }}
-            className="text-lg md:text-xl text-o max-w-xl mx-auto leading-relaxed text-fuchsia-500 font-bold mt-6"
-          >
+          <p className="text-lg md:text-xl text-fuchsia-500 font-bold mt-6">
             Get in touch with us for all your uniform requirements. We are just
             a call or email away.
-          </motion.p>
+          </p>
         </div>
 
         {/* Contact Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {status === "loading" ? (
-            <p className="text-center col-span-full">Loading...</p>
-          ) : status === "failed" ? (
-            <p className="text-center col-span-full text-red-500">
-              Error loading contact details
-            </p>
-          ) : (
-            dataToDisplay.map((item, index) => (
-              <MotionCard
-                key={index}
-                whileHover={{ y: -5 }}
-                transition={{ type: "spring", stiffness: 200 }}
-                className="hover:shadow-xl transition-shadow bg-yellow-100 font-bold hover:bg-sky-100 cursor-pointer"
-                onClick={() => setSelectedCard(item)}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {dataToDisplay.map((item, idx) => (
+            <motion.div
+              key={idx}
+              whileHover={{ scale: 1.05 }}
+              className="cursor-pointer"
+              onClick={() => setSelectedCard(item)}
+            >
+              <Card
+                className={`shadow-lg rounded-2xl transition-all duration-300 ${
+                  item.officeType === "Main Office"
+                    ? "bg-blue-100"
+                    : item.officeType === "Branch Office"
+                    ? "bg-yellow-100"
+                    : "bg-amber-100"
+                }`}
               >
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-brand-red">
-                    <span className="bg-brand-red/10 p-2 rounded-full">
-                      {item.officeType === "Business Details" ? (
-                        <CreditCard className="w-5 h-5 text-brand-red" />
-                      ) : (
-                        <Building className="w-5 h-5 text-brand-red" />
-                      )}
-                    </span>
+                <CardHeader className="flex flex-row items-center gap-3">
+                  {item.officeType === "Main Office" && (
+                    <Building className="w-6 h-6 text-red-500" />
+                  )}
+                  {item.officeType === "Branch Office" && (
+                    <MapPin className="w-6 h-6 text-orange-500" />
+                  )}
+                  {item.officeType === "Business Details" && (
+                    <CreditCard className="w-6 h-6 text-pink-500" />
+                  )}
+                  <CardTitle className="text-lg font-bold">
                     {item.officeType}
                   </CardTitle>
                 </CardHeader>
-
-                <CardContent className="space-y-4 text-sm">
-                  {renderCardContent(item)}
-                </CardContent>
-              </MotionCard>
-            ))
-          )}
+                <CardContent>{renderCardContent(item)}</CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
 
-        {/* BIG Overlay Modal */}
+        {/* Overlay Modal */}
         <AnimatePresence>
           {selectedCard && (
             <motion.div
-              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedCard(null)}
             >
               <motion.div
-                className="relative w-[96vw] max-w-5xl"
-                initial={{ scale: 0.85, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 220, damping: 22 }}
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.5 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Close */}
                 <button
-                  aria-label="Close modal"
                   onClick={() => setSelectedCard(null)}
-                  className="absolute -top-2 -right-2 bg-white rounded-full p-1.5 shadow-lg hover:scale-105 transition"
+                  className="absolute top-4 right-4 text-gray-600 hover:text-red-600"
                 >
-                  <X className="w-5 h-5 text-gray-700" />
+                  <X className="w-6 h-6" />
                 </button>
-
-                {/* Same card look, just larger */}
-                <Card className="bg-yellow-100 font-bold rounded-2xl shadow-2xl">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-brand-red">
-                      <span className="bg-brand-red/10 p-2 rounded-full">
-                        {selectedCard.officeType === "Business Details" ? (
-                          <CreditCard className="w-5 h-5 text-brand-red" />
-                        ) : (
-                          <Building className="w-5 h-5 text-brand-red" />
-                        )}
-                      </span>
-                      {selectedCard.officeType}
-                    </CardTitle>
-                  </CardHeader>
-
-                  {/* Bigger text inside modal for readability */}
-                  <CardContent className="space-y-5 text-base md:text-lg">
-                    {renderCardContent(selectedCard, true)}
-                  </CardContent>
-                </Card>
+                <h2 className="text-2xl font-bold mb-4">
+                  {selectedCard.officeType}
+                </h2>
+                {renderCardContent(selectedCard)}
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Service Areas */}
-        <div className="text-center mb-14">
-          <motion.h2
-            className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-700 via-fuchsia-500 to-amber-500 text-green-900 bg-clip-text text-transparent drop-shadow-lg hover:text-slate-500 cursor-pointer"
-            initial={{ scale: 0.95 }}
-            animate={{ scale: [0.95, 1.02, 1] }}
-            transition={{
-              duration: 2,
-              ease: "easeInOut",
-              repeat: Infinity,
-              repeatType: "mirror",
-            }}
-          >
-            Our Service Areas
-          </motion.h2>
-        </div>
-
-        <Card className="shadow-md bg-slate-200 m-4 p-4 rounded-2xl">
+        <Card className="shadow-md bg-slate-200 m-4 p-4 rounded-2xl mt-16">
           <CardContent>
             <div className="flex flex-wrap justify-center gap-3 rounded-xl">
               {serviceAreas.map((area, i) => (
