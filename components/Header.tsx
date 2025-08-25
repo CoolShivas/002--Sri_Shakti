@@ -40,6 +40,9 @@ const Header = () => {
     "+91 97865 97835",
   ];
 
+  // console.log(logoHeroArr);
+  console.log(contactDetails);
+
   return (
     <div className="bg-white border-b border-gray-200 text-gray-800 py-2">
       <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
@@ -47,22 +50,22 @@ const Header = () => {
         <div className="flex items-center space-x-3">
           <Image
             src={logoSrc}
-            alt="Sri Sakthi Uniforms Logo"
+            alt="Shikha Uniforms Logo"
             width={40}
             height={40}
             className="rounded-full cursor-pointer"
             priority
           />
           <span className="text-lg sm:text-xl font-bold tracking-wide uppercase text-center sm:text-left">
-            SRI <span className="text-red-600">SAKTHI</span> UNIFORMS
+            <span className="text-red-600">SHI</span>KHA{" "}
+            <span className="text-red-600">UNI</span>FORMS
           </span>
         </div>
 
         {/* Contact Info */}
         <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-gray-600 font-bold">
-          {contactNumbers.map((number, index) => (
+          {/* {contactNumbers.map((number, index) => (
             <div key={index} className="flex items-center gap-1">
-              <FaPhoneAlt className="text-blue-600" />
               <Link
                 href="/contact"
                 className="hover:text-red-600 hover:text-xl"
@@ -70,7 +73,38 @@ const Header = () => {
                 {number}
               </Link>
             </div>
-          ))}
+          ))} */}
+          {/* <div className="flex-row justify-center align-center">
+            <div>
+              <FaPhoneAlt className="text-blue-600" />
+            </div>
+            <div>
+              +91-
+              {contactDetails.contactNo1}
+            </div>
+          </div>
+          <div>
+            <FaPhoneAlt className="text-blue-600" /> +91-
+            {contactDetails.contactNo2}
+          </div> */}
+
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            {/* First number */}
+            <Link href="/contact">
+              <div className="flex items-center gap-2 text-lg hover:text-red-500 cursor-pointer hover:text-xl">
+                <FaPhoneAlt className="text-blue-600" />
+                <span>{contactDetails.contactNo1}</span>
+              </div>
+            </Link>
+
+            {/* Second number */}
+            <Link href="/contact">
+              <div className="flex items-center gap-2 text-lg hover:text-red-500 cursor-pointer hover:text-xl">
+                <FaPhoneAlt className="text-blue-600" />
+                <span>{contactDetails.contactNo2}</span>
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
