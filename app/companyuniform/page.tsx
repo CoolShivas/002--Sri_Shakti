@@ -94,7 +94,7 @@ const CompanyUniformPage = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section
-        className="relative py-20 text-white"
+        className="relative w-full min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[75vh] flex items-center justify-center text-white"
         style={{
           backgroundImage: `url(${heroImageUrl})`,
           backgroundSize: "cover",
@@ -119,7 +119,7 @@ const CompanyUniformPage = () => {
             >
               <img
                 src={logoItem.url || "/placeholder-logo.png"}
-                alt="Sri Sakthi Uniforms Logo"
+                alt="Shikha Uniforms Logo"
                 className="h-16 w-auto rounded-full shadow-md object-contain mx-auto"
               />
             </motion.div>
@@ -165,47 +165,50 @@ const CompanyUniformPage = () => {
                     variants={cardVariants}
                   >
                     <Link href={preview.link}>
-                      <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
-                        <CardHeader>
-                          <h3 className="text-xl font-semibold capitalize">
-                            {preview.label}
-                          </h3>
-                        </CardHeader>
+                      <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
                         <CardContent>
                           {/* 🔹 Image container with overlays */}
-                          <div className="relative w-full h-72 bg-white">
+                          <div className="relative aspect-[4/3] w-full">
                             <Image
                               src={preview.data.image}
                               alt={preview.data.title}
                               fill
-                              className="object-contain p-2"
+                              sizes="(max-width: 768px) 100vw,
+                                   (max-width: 1200px) 50vw,
+                                   33vw"
                               priority={index < 3}
                             />
 
                             {/* 🔹 Logo top-right INSIDE image */}
                             {logoItem && (
-                              <div className="absolute top-2 right-20 z-10 bg-white/80 rounded-full p-1 shadow">
+                              <div className="absolute top-2 right-2 bg-white/80 p-1 rounded-full shadow-md">
                                 <img
                                   src={logoItem.url}
                                   alt="Logo"
-                                  className="h-8 w-8 object-contain"
+                                  width={40}
+                                  height={40}
+                                  className="object-contain rounded-full"
                                 />
                               </div>
                             )}
 
                             {/* 🔹 Uniform Code bottom-right INSIDE image */}
                             {preview.data.uniformCode && (
-                              <div className="absolute bottom-2 right-20 z-10 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                              <div className="absolute bottom-2 right-2 bg-sky-200 text-black font-semibold text-xs px-2 py-1 rounded">
                                 {preview.data.uniformCode}
                               </div>
                             )}
                           </div>
-
-                          <p className="mt-4 text-gray-700 line-clamp-3">
-                            {preview.data.description}
-                          </p>
-                          <p className="mt-2 text-blue-600 font-semibold">
+                          <CardHeader>
+                            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue  text-center hover:text-red-500 cursor-pointer">
+                              {preview.label}
+                            </h3>
+                          </CardHeader>
+                          <p className=" text-blue-600 font-bold text-center">
                             View all {preview.label} →
+                          </p>
+                          <p className="mt-6 text-gray-800 line-clamp-3 text-sm font-semibold">
+                            {preview.data.description}
                           </p>
                         </CardContent>
                       </Card>

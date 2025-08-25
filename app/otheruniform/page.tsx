@@ -164,7 +164,7 @@ const OtherUniformPage = () => {
                             src={uniform.image}
                             alt={uniform.title}
                             fill
-                            className="object-cover rounded-lg"
+                            className="object-contain rounded-lg"
                             sizes="(max-width: 768px) 100vw,
                                    (max-width: 1200px) 50vw,
                                    33vw"

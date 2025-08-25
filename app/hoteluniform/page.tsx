@@ -110,7 +110,7 @@ const HotelUniformPage = () => {
             >
               <img
                 src={logoItem.url || "/placeholder-logo.png"}
-                alt="Sri Sakthi Uniforms Logo"
+                alt="Shikha Uniforms Logo"
                 className="h-16 w-auto rounded-full shadow-md object-contain mx-auto"
               />
             </motion.div>
@@ -159,7 +159,7 @@ const HotelUniformPage = () => {
                       onClick={() => setSelectedIndex(index)}
                     >
                       <CardHeader>
-                        <h3 className="text-xl font-semibold">
+                        <h3 className="text-2xl font-semibold text-center text-brand-blue">
                           {uniform.title}
                         </h3>
                       </CardHeader>
@@ -170,7 +170,7 @@ const HotelUniformPage = () => {
                             src={uniform.image}
                             alt={uniform.title}
                             fill
-                            className="object-cover rounded-lg"
+                            className="object-contain rounded-lg"
                             sizes="(max-width: 768px) 100vw,
                                    (max-width: 1200px) 50vw,
                                    33vw"
@@ -192,13 +192,13 @@ const HotelUniformPage = () => {
 
                           {/* ✅ Uniform Code (bottom-right corner) */}
                           {uniform.uniformCode && (
-                            <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                            <div className="absolute bottom-2 right-2 bg-sky-200 text-black font-semibold text-xs px-2 py-1 rounded">
                               {uniform.uniformCode}
                             </div>
                           )}
                         </div>
 
-                        <p className="mt-4 text-gray-700 line-clamp-3">
+                        <p className="mt-4 text-gray-800 line-clamp-3 text-sm font-semibold">
                           {uniform.description}
                         </p>
                       </CardContent>
@@ -246,7 +246,7 @@ const HotelUniformPage = () => {
                   <div className="absolute top-4 right-4 bg-white/80 p-2 rounded-full shadow-md">
                     <Image
                       src={logoItem.url}
-                      alt="Logo"
+                      alt="Shikha Uniforms Logo"
                       width={50}
                       height={50}
                       className="object-contain rounded-full"
