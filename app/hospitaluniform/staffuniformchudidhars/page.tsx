@@ -76,6 +76,14 @@ const StaffUniformChudidharPage = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedIndex, handleKeyDown]);
 
+  const logoHeroArr = useSelector((state: any) =>
+    Array.isArray(state?.logoHeroImages?.logoHeroArr)
+      ? state.logoHeroImages.logoHeroArr
+      : []
+  );
+
+  const logoItem = logoHeroArr.find((item: any) => item?.type === "logo");
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main Section */}
@@ -90,12 +98,14 @@ const StaffUniformChudidharPage = () => {
             {/* Uniform Cards */}
             <div className="md:col-span-3">
               {isLoading && (
-                <div className="py-10 text-center text-lg">
+                <div className="py-10 text-center text-3xl font-bold">
                   Loading staff uniform chudidhar ...
                 </div>
               )}
               {error && (
-                <div className="py-10 text-center text-red-500">{error}</div>
+                <div className="py-10 text-center text-red-500 text-3xl font-bold">
+                  {error}
+                </div>
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -113,37 +123,50 @@ const StaffUniformChudidharPage = () => {
                           onClick={() => setSelectedIndex(index)}
                         >
                           <CardHeader>
-                            <h3 className="text-xl font-semibold">
+                            <h3 className="text-xl font-semibold text-center text-blue-500">
                               {uniform.title}
                             </h3>
                           </CardHeader>
                           <CardContent>
-                            <div className="relative h-60 bg-gray-100 flex items-center justify-center">
+                            <div className="relative w-full max-w-2xl max-h-[30vh] overflow-hidden cursor-pointer">
                               {/* Uniform Image */}
                               <Image
                                 src={uniform.image}
                                 alt={uniform.title}
-                                fill
-                                className="object-contain p-2"
+                                width={1200}
+                                height={800}
+                                className="w-full h-auto rounded-lg shadow-lg object-contain"
                                 priority={index < 3}
                               />
 
                               {/* Logo top-right */}
-                              {uniform.logo && (
-                                <div className="absolute top-2 right-2 bg-white/80 rounded p-1">
+                              {/* {uniform.logo && (
+                                                        <div className="absolute top-2 right-2 rounded p-1">
+                                                          <Image
+                                                            src={uniform.logo}
+                                                            alt="logo"
+                                                            width={40}
+                                                            height={40}
+                                                            className="object-contain"
+                                                          />
+                                                        </div>
+                                                      )} */}
+
+                              {logoItem && (
+                                <div className="absolute top-2 right-2 bg-white/80 p-1 rounded-full shadow-md">
                                   <Image
-                                    src={uniform.logo}
-                                    alt="logo"
+                                    src={logoItem.url}
+                                    alt="Logo"
                                     width={40}
                                     height={40}
-                                    className="object-contain"
+                                    className="object-contain rounded-full"
                                   />
                                 </div>
                               )}
 
                               {/* Uniform Code bottom-right */}
                               {uniform.uniformCode && (
-                                <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                                <span className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
                                   {uniform.uniformCode}
                                 </span>
                               )}
@@ -156,7 +179,7 @@ const StaffUniformChudidharPage = () => {
                       </motion.div>
                     ))
                   : !isLoading && (
-                      <p className="text-center text-gray-500">
+                      <p className="text-center text-gray-500 text-2xl font-semibold">
                         No Doctor Uniform Sarees found.
                       </p>
                     )}
@@ -194,21 +217,33 @@ const StaffUniformChudidharPage = () => {
                 />
 
                 {/* Logo top-right */}
-                {uniforms[selectedIndex].logo && (
-                  <div className="absolute top-4 right-4 bg-white/80 rounded p-2">
+                {/* {uniforms[selectedIndex].logo && (
+                          <div className="absolute top-4 right-4 bg-white/80 p-2 rounded-full shadow-md">
+                            <Image
+                              src={uniforms[selectedIndex].logo}
+                              alt="logo"
+                              width={50}
+                              height={50}
+                              className="object-contain rounded-full"
+                            />
+                          </div>
+                        )} */}
+
+                {logoItem && (
+                  <div className="absolute top-4 right-6 bg-white/80 p-2 rounded-full shadow-md">
                     <Image
-                      src={uniforms[selectedIndex].logo}
-                      alt="logo"
+                      src={logoItem.url}
+                      alt="Logo"
                       width={50}
                       height={50}
-                      className="object-contain"
+                      className="object-contain rounded-full"
                     />
                   </div>
                 )}
 
                 {/* Uniform Code bottom-right */}
                 {uniforms[selectedIndex].uniformCode && (
-                  <span className="absolute bottom-4 right-4 bg-black/60 text-white text-sm px-3 py-1 rounded">
+                  <span className="absolute bottom-4 right-6 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
                     {uniforms[selectedIndex].uniformCode}
                   </span>
                 )}

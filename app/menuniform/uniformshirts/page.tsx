@@ -67,6 +67,14 @@ const UniformShirtsPage = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedIndex, handleKeyDown]);
 
+  const logoHeroArr = useSelector((state: any) =>
+    Array.isArray(state?.logoHeroImages?.logoHeroArr)
+      ? state.logoHeroImages.logoHeroArr
+      : []
+  );
+
+  const logoItem = logoHeroArr.find((item: any) => item?.type === "logo");
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main Section */}
@@ -81,12 +89,14 @@ const UniformShirtsPage = () => {
             {/* Uniform Cards */}
             <div className="md:col-span-3">
               {isLoading && (
-                <div className="py-10 text-center text-lg">
-                  Loading uniforms...
+                <div className="py-10 text-center text-3xl font-bold">
+                  Loading shirts uniforms...
                 </div>
               )}
               {error && (
-                <div className="py-10 text-center text-red-500">{error}</div>
+                <div className="py-10 text-center text-red-500 text-3xl font-bold">
+                  {error}
+                </div>
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -104,35 +114,50 @@ const UniformShirtsPage = () => {
                           onClick={() => setSelectedIndex(index)}
                         >
                           <CardHeader>
-                            <h3 className="text-xl font-semibold">
+                            <h3 className="text-xl font-semibold text-center text-blue-500">
                               {uniform.title}
                             </h3>
                           </CardHeader>
                           <CardContent>
-                            <div className="relative h-60">
+                            <div className="relative w-full max-w-2xl max-h-[30vh] overflow-hidden cursor-pointer">
+                              {/* Uniform Image */}
                               <Image
                                 src={uniform.image}
                                 alt={uniform.title}
-                                fill
-                                className="object-cover rounded-lg"
+                                width={1200}
+                                height={800}
+                                className="w-full h-auto rounded-lg shadow-lg object-contain"
                                 priority={index < 3}
                               />
+
+                              {logoItem && (
+                                <div className="absolute top-2 right-2 bg-white/80 p-1 rounded-full shadow-md">
+                                  <Image
+                                    src={logoItem.url}
+                                    alt="Logo"
+                                    width={40}
+                                    height={40}
+                                    className="object-contain rounded-full"
+                                  />
+                                </div>
+                              )}
+
+                              {/* Uniform Code bottom-right */}
+                              {uniform.uniformCode && (
+                                <span className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
+                                  {uniform.uniformCode}
+                                </span>
+                              )}
                             </div>
                             <p className="mt-4 text-gray-700 line-clamp-3">
                               {uniform.description}
-                            </p>
-                            <p className="text-sm text-gray-500 mt-2">
-                              Code:{" "}
-                              <span className="font-semibold">
-                                {uniform.uniformCode}
-                              </span>
                             </p>
                           </CardContent>
                         </Card>
                       </motion.div>
                     ))
                   : !isLoading && (
-                      <p className="text-center text-gray-500">
+                      <p className="text-center text-gray-500 text-2xl font-semibold">
                         No Uniform Shirts found.
                       </p>
                     )}
@@ -160,13 +185,35 @@ const UniformShirtsPage = () => {
               transition={{ type: "spring", stiffness: 260, damping: 20 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
-                src={uniforms[selectedIndex].image}
-                alt={uniforms[selectedIndex].title}
-                width={1000}
-                height={700}
-                className="rounded-lg object-contain mx-auto"
-              />
+              {/* Full Image */}
+              <div className="relative w-full h-[80vh] bg-white flex items-center justify-center rounded-lg overflow-hidden">
+                <Image
+                  src={uniforms[selectedIndex].image}
+                  alt={uniforms[selectedIndex].title}
+                  fill
+                  className="object-contain"
+                />
+
+                {logoItem && (
+                  <div className="absolute top-4 right-6 bg-white/80 p-2 rounded-full shadow-md">
+                    <Image
+                      src={logoItem.url}
+                      alt="Logo"
+                      width={50}
+                      height={50}
+                      className="object-contain rounded-full"
+                    />
+                  </div>
+                )}
+
+                {/* Uniform Code bottom-right */}
+                {uniforms[selectedIndex].uniformCode && (
+                  <span className="absolute bottom-4 right-6 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
+                    {uniforms[selectedIndex].uniformCode}
+                  </span>
+                )}
+              </div>
+
               <button
                 className="absolute top-4 right-4 bg-black/60 p-2 rounded-full text-white"
                 onClick={() => setSelectedIndex(null)}

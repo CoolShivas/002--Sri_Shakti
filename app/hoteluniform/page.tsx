@@ -242,7 +242,7 @@ const HotelUniformPage = () => {
 
                 {/* ✅ Overlay Logo in Modal */}
                 {logoItem && (
-                  <div className="absolute top-4 right-4 bg-white/80 p-2 rounded-full shadow-md">
+                  <div className="absolute top-4 right-6 bg-white/80 p-2 rounded-full shadow-md">
                     <Image
                       src={logoItem.url}
                       alt="Shikha Uniforms Logo"
@@ -255,7 +255,7 @@ const HotelUniformPage = () => {
 
                 {/* ✅ Uniform Code in Modal */}
                 {uniforms[selectedIndex].uniformCode && (
-                  <div className="absolute bottom-4 right-4 bg-black/70 text-white text-sm px-3 py-1 rounded">
+                  <div className="absolute bottom-4 right-6 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
                     {uniforms[selectedIndex].uniformCode}
                   </div>
                 )}
