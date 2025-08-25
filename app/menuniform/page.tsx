@@ -163,17 +163,16 @@ const MenUniformsPage = () => {
                     variants={cardVariants}
                   >
                     <Link href={preview.link}>
-                      <Card className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+                      <Card className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2">
                         <CardContent>
-                          <div className="relative aspect-[4/3] w-full">
+                          <div className="relative w-full max-w-2xl max-h-[30vh] overflow-hidden cursor-pointer">
                             {/* Uniform Image */}
                             <Image
                               src={preview.data.image}
                               alt={preview.data.title}
-                              fill
-                              sizes="(max-width: 768px) 100vw,
-                              (max-width: 1200px) 50vw,
-                              33vw"
+                              width={1200}
+                              height={800}
+                              className="w-full h-auto rounded-lg shadow-lg object-contain"
                               priority={index < 3}
                             />
 
@@ -192,7 +191,7 @@ const MenUniformsPage = () => {
 
                             {/* ✅ Uniform Code (bottom-right) */}
                             {preview.data.uniformCode && (
-                              <div className="absolute bottom-2 right-2 bg-sky-200 text-black font-semibold text-xs px-2 py-1 rounded">
+                              <div className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
                                 {preview.data.uniformCode}
                               </div>
                             )}

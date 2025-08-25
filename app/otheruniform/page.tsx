@@ -104,7 +104,7 @@ const OtherUniformPage = () => {
             >
               <img
                 src={logoItem.url || "/placeholder-logo.png"}
-                alt="Sri Sakthi Uniforms Logo"
+                alt="Shikha Uniforms Logo"
                 className="h-16 w-auto rounded-full shadow-md object-contain mx-auto"
               />
             </motion.div>
@@ -149,25 +149,18 @@ const OtherUniformPage = () => {
                     variants={cardVariants}
                   >
                     <Card
-                      className="shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+                      className="bg-gradient-to-br from-white to-blue-50 hover:from-brand-red/5 hover:to-brand-blue/10 border border-gray-200 hover:border-brand-blue transition-all duration-300 shadow-sm hover:shadow-2xl rounded-xl group p-2"
                       onClick={() => setSelectedIndex(index)}
                     >
-                      <CardHeader>
-                        <h3 className="text-xl font-semibold">
-                          {uniform.title}
-                        </h3>
-                      </CardHeader>
                       <CardContent>
-                        <div className="relative aspect-[4/3] w-full">
+                        <div className="relative w-full max-w-2xl max-h-[30vh] overflow-hidden cursor-pointer">
                           {/* ✅ Uniform Image fixed aspect ratio */}
                           <Image
                             src={uniform.image}
                             alt={uniform.title}
-                            fill
-                            className="object-contain rounded-lg"
-                            sizes="(max-width: 768px) 100vw,
-                                   (max-width: 1200px) 50vw,
-                                   33vw"
+                            width={1200}
+                            height={800}
+                            className="w-full h-auto rounded-lg shadow-lg object-contain"
                             priority={index < 3}
                           />
 
@@ -186,13 +179,18 @@ const OtherUniformPage = () => {
 
                           {/* ✅ Uniform Code (bottom-right corner) */}
                           {uniform.uniformCode && (
-                            <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                            <div className="absolute bottom-2 right-0 bg-sky-200/80 text-xl px-3 py-1 rounded font-semibold shadow-md">
                               {uniform.uniformCode}
                             </div>
                           )}
                         </div>
 
-                        <p className="mt-4 text-gray-700 line-clamp-3">
+                        <CardHeader>
+                          <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-blue  text-center hover:text-red-500 cursor-pointer">
+                            {uniform.title}
+                          </h3>
+                        </CardHeader>
+                        <p className="mt-6 text-gray-800 line-clamp-3 text-sm font-semibold">
                           {uniform.description}
                         </p>
                       </CardContent>
