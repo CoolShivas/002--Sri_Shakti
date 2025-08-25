@@ -102,7 +102,7 @@ const ContactSection = () => {
         <div className="flex items-start gap-2">
           <MapPin className={`w-4 h-4 mt-1 text-brand-blue`} />
           <div>
-            <p className="font-semibold">Sri Sakthi Uniforms</p>
+            <p className="font-semibold text-xl mb-2">Sri Sakthi Uniforms</p>
             <p className="text-gray-600">{item.address}</p>
           </div>
         </div>
@@ -189,7 +189,7 @@ const ContactSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="text-lg md:text-xl text-o max-w-xl mx-auto leading-relaxed text-fuchsia-500 font-bold"
+            className="text-lg md:text-xl text-o max-w-xl mx-auto leading-relaxed text-fuchsia-500 font-bold mt-6"
           >
             Get in touch with us for all your uniform requirements. We are just
             a call or email away.
@@ -303,7 +303,7 @@ const ContactSection = () => {
           </motion.h2>
         </div>
 
-        <Card className="shadow-md bg-slate-200">
+        <Card className="shadow-md bg-slate-200 m-4 p-4 rounded-2xl">
           <CardContent>
             <div className="flex flex-wrap justify-center gap-3 rounded-xl">
               {serviceAreas.map((area, i) => (
