@@ -29,7 +29,7 @@ const Footer = () => {
     dispatch(fetchContactDetailsApiServer());
   }, [dispatch]);
 
-  console.log(contactDetails);
+  // console.log(contactDetails);
 
   return (
     <footer className="bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1f2937] text-white pt-16 px-6 pb-10">
@@ -61,12 +61,20 @@ const Footer = () => {
           </h4>
           <ul className="text-sm text-gray-400 space-y-2">
             <li className="flex items-center gap-2 hover:text-white hover:text-xl cursor-pointer transition-all">
-              <Phone className="w-4 h-4 text-rose-400" />
-              {contactDetails?.contactNo1}
+              {/* <Link href="/contact" className="flex-row">
+                <Phone className="w-4 h-4 text-rose-400" />
+                {contactDetails?.contactNo1}
+              </Link> */}
+              <Link href="/contact" className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-rose-400" />
+                <span>{contactDetails?.contactNo1}</span>
+              </Link>
             </li>
             <li className="flex items-center gap-2 hover:text-white hover:text-xl cursor-pointer transition-all">
-              <Phone className="w-4 h-4 text-rose-400" />
-              {contactDetails?.contactNo2}
+              <Link href="/contact" className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-rose-400" />
+                <span>{contactDetails?.contactNo2}</span>
+              </Link>
             </li>
             <li className="flex items-center gap-2 hover:text-white hover:text-xl cursor-pointer transition-all">
               <Mail className="w-4 h-4 text-rose-400" /> {contactDetails?.email}
@@ -202,12 +210,28 @@ const Footer = () => {
       <div className="border-t border-gray-700 mt-12 pt-6 text-gray-500 text-sm flex flex-col md:flex-row items-center justify-around gap-4 text-center md:text-left">
         <span className="hover:text-white hover:text-xl cursor-pointer transition-all">
           Copyright &copy; {new Date().getFullYear()}{" "}
-          {contactDetails?.websiteName ||
-            "Shikha Clothing and Uniforms, Chennai"}
-          . All rights reserved.
+          {contactDetails?.websiteName || "SHIKHA CLOTHING & UNIFORMS"}. All
+          rights reserved.
         </span>
+        {/* <span className="hover:text-white hover:text-xl cursor-pointer transition-all">
+          Website design by{" "}
+          <Link
+            href="https://www.softwaresuggest.com/services/xenturalt-codes"
+            target="_blank"
+          >
+            Xenturalt Codes IT Solutions Pvt. Ltd.
+          </Link>
+        </span> */}
+
         <span className="hover:text-white hover:text-xl cursor-pointer transition-all">
-          Website design by Xenturalt Codes IT Solutions Pvt. Ltd.
+          Website design by{" "}
+          <Link
+            href="https://xenturaltcodes.in/"
+            target="_blank"
+            className="hover:underline underline-offset-4"
+          >
+            Xenturalt Codes IT Solutions Pvt. Ltd.
+          </Link>
         </span>
       </div>
     </footer>

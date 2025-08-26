@@ -378,7 +378,7 @@ const HeroSlider = () => {
           <h2 className="text-xl md:text-4xl text-white font-bold mb-2">
             {slides[current].title}
           </h2>
-          <p className="text-sm md:text-lg text-white max-w-xl mx-auto">
+          <p className="text-xl md:text-lg text-white max-w-xl mx-auto">
             {slides[current].subtitle}
           </p>
         </div>

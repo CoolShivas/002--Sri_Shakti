@@ -59,7 +59,7 @@ const Header = () => {
           <span className="text-lg sm:text-xl font-bold tracking-wide uppercase text-center sm:text-left">
             {/* <span className="text-red-600">SHI</span>KHA{" "} */}
             {/* <span className="text-red-600">CLO</span>THINGS */}
-            <span className="text-red-600">SHI</span>KHA CLOTHING AND UNIFORMS
+            <span className="text-red-600">SHI</span>KHA CLOTHING & UNIFORMS
           </span>
         </div>
 
