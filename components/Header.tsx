@@ -41,7 +41,7 @@ const Header = () => {
   ];
 
   // console.log(logoHeroArr);
-  console.log(contactDetails);
+  // console.log(contactDetails);
 
   return (
     <div className="bg-white border-b border-gray-200 text-gray-800 py-2">
