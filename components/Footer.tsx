@@ -206,7 +206,7 @@ const Footer = () => {
           rights reserved.
         </span>
         <span className="hover:text-white hover:text-xl cursor-pointer transition-all">
-          Website design by Xenturalt Codes IT Solutions
+          Website design by Xenturalt Codes IT Solutions Pvt. Ltd.
         </span>
       </div>
     </footer>
