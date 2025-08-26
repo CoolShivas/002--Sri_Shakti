@@ -47,7 +47,7 @@ const Header = () => {
     <div className="bg-white border-b border-gray-200 text-gray-800 py-2">
       <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
         {/* Logo and Brand */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 gap-2">
           <Image
             src={logoSrc}
             alt="Shikha Uniforms Logo"
@@ -57,8 +57,9 @@ const Header = () => {
             priority
           />
           <span className="text-lg sm:text-xl font-bold tracking-wide uppercase text-center sm:text-left">
-            <span className="text-red-600">SHI</span>KHA{" "}
-            <span className="text-red-600">UNI</span>FORMS
+            {/* <span className="text-red-600">SHI</span>KHA{" "} */}
+            {/* <span className="text-red-600">CLO</span>THINGS */}
+            <span className="text-red-600">SHI</span>KHA CLOTHINGS
           </span>
         </div>
 
