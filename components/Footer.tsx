@@ -202,8 +202,9 @@ const Footer = () => {
       <div className="border-t border-gray-700 mt-12 pt-6 text-gray-500 text-sm flex flex-col md:flex-row items-center justify-around gap-4 text-center md:text-left">
         <span className="hover:text-white hover:text-xl cursor-pointer transition-all">
           Copyright &copy; {new Date().getFullYear()}{" "}
-          {contactDetails?.websiteName || "Shikha Clothings, Chennai"}. All
-          rights reserved.
+          {contactDetails?.websiteName ||
+            "Shikha Clothing and Uniforms, Chennai"}
+          . All rights reserved.
         </span>
         <span className="hover:text-white hover:text-xl cursor-pointer transition-all">
           Website design by Xenturalt Codes IT Solutions Pvt. Ltd.
