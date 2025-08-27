@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchContactDetailsApiServer } from "@/app/redux/detailSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Phone, Mail, Building, CreditCard, X } from "lucide-react";
+import { MapPin, Building, CreditCard, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ContactDetail {
@@ -23,7 +23,7 @@ interface ContactDetail {
 
 interface RootState {
   contactDetails: {
-    detailArr: any; // can be array OR object
+    detailArr: any;
     status: "idle" | "loading" | "succeeded" | "failed";
     error: string | null;
   };
@@ -63,7 +63,6 @@ const ContactSection = () => {
     "Mumbai",
   ];
 
-  // fallback
   const fallbackData: ContactDetail[] = [
     {
       officeType: "Main Office",
@@ -88,7 +87,6 @@ const ContactSection = () => {
     },
   ];
 
-  // ✅ Normalize API response into array format
   const normalizedData: ContactDetail[] = detailArr
     ? Array.isArray(detailArr)
       ? detailArr
@@ -122,11 +120,11 @@ const ContactSection = () => {
       : fallbackData;
 
   const renderCardContent = (item: ContactDetail) => (
-    <div className="space-y-3">
+    <div className="space-y-3 text-base sm:text-xl">
       {item.address && <p className="text-gray-700">{item.address}</p>}
       {item.phone &&
         item.phone.map((phone, i) => (
-          <p key={i} className="text-brand-red">
+          <p key={i} className="text-brand-red font-semibold">
             {phone}
           </p>
         ))}
@@ -162,7 +160,7 @@ const ContactSection = () => {
           >
             Contact Information
           </motion.h2>
-          <p className="text-lg md:text-xl text-fuchsia-500 font-bold mt-6">
+          <p className="text-lg md:text-xl text-gray-600 font-medium mt-6">
             Get in touch with us for all your uniform requirements. We are just
             a call or email away.
           </p>
@@ -196,7 +194,7 @@ const ContactSection = () => {
                   {item.officeType === "Business Details" && (
                     <CreditCard className="w-6 h-6 text-pink-500" />
                   )}
-                  <CardTitle className="text-lg font-bold">
+                  <CardTitle className="text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
                     {item.officeType}
                   </CardTitle>
                 </CardHeader>
@@ -210,18 +208,18 @@ const ContactSection = () => {
         <AnimatePresence>
           {selectedCard && (
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedCard(null)}
             >
               <motion.div
-                initial={{ scale: 0.5 }}
+                initial={{ scale: 0.7 }}
                 animate={{ scale: 1 }}
-                exit={{ scale: 0.5 }}
+                exit={{ scale: 0.7 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative"
+                className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 md:p-10 w-[90%] max-w-sm sm:max-w-lg md:max-w-2xl relative"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -230,35 +228,28 @@ const ContactSection = () => {
                 >
                   <X className="w-6 h-6" />
                 </button>
-                <h2 className="text-2xl font-bold mb-4">
-                  {selectedCard.officeType}
-                </h2>
+
+                {/* Modal Header with Icon + Title */}
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  {selectedCard.officeType === "Main Office" && (
+                    <Building className="w-7 h-7 text-red-500" />
+                  )}
+                  {selectedCard.officeType === "Branch Office" && (
+                    <MapPin className="w-7 h-7 text-orange-500" />
+                  )}
+                  {selectedCard.officeType === "Business Details" && (
+                    <CreditCard className="w-7 h-7 text-pink-500" />
+                  )}
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-fuchsia-600 text-center">
+                    {selectedCard.officeType}
+                  </h2>
+                </div>
+
                 {renderCardContent(selectedCard)}
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Service Areas */}
-        <Card className="shadow-md bg-slate-200 m-4 p-4 rounded-2xl mt-16">
-          <CardContent>
-            <div className="flex flex-wrap justify-center gap-3 rounded-xl">
-              {serviceAreas.map((area, i) => (
-                <span
-                  key={i}
-                  className="relative inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#6ccfbf] text-white text-base sm:text-lg font-semibold shadow-lg hover:bg-[#c4ee6f] transition duration-300 ease-in-out group cursor-pointer transform hover:scale-110"
-                >
-                  <span className="relative z-10">{area}</span>
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-indigo-500 opacity-0 group-hover:opacity-100 blur-sm transition duration-500" />
-                </span>
-              ))}
-              <span className="relative inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#728385] text-white text-base sm:text-lg font-semibold shadow-lg hover:bg-[#1f2937] transition duration-300 ease-in-out group transform hover:scale-110">
-                <span className="relative z-10">+ All India</span>
-                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-indigo-500 opacity-0 group-hover:opacity-100 blur-sm transition duration-500" />
-              </span>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </section>
   );
