@@ -6,8 +6,12 @@ import { ReactNode } from "react";
 import { Providers } from "../app/redux/providers";
 
 export const metadata = {
-  title: "Sri Sakthi Uniforms",
-  description: "Uniform manufacturer in Tamil Nadu",
+  title: "SHIKHA CLOTHING & UNIFORMS",
+  description: "Best clothing and uniform manufacturer in India",
+  icons: {
+    // icon: "/favicon.ico", // Fallback favicon from /public folder
+    icon: "/shikha.jpg",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
